@@ -9,8 +9,5 @@
         <module name="FoodOrderingApp" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="FoodOrderingApp" target="1.8" />
-    </bytecodeTargetLevel>
   </component>
 </project>
