@@ -29,4 +29,16 @@ public class UserServiceImpl implements UserService{
         return userRepository.findUser(contactNumber);
     }
 
+    @Override
+    public Boolean newUser (String firstName, String lastName, String email, String contactNumber, String password) {
+        Boolean success = false;
+        userRepository.newUser(firstName, lastName, email, contactNumber, password);
+        if (userRepository.findUser(contactNumber)!=null) {
+            success = true;
+        }
+        return success;
+    }
+
+
+
 }

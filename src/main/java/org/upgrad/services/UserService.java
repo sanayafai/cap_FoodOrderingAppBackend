@@ -12,6 +12,6 @@ import java.util.Optional;
 public interface UserService {
 
     String findUserPassword(String contactNumber);
-
     User findUser(String contactNumber);
+    Boolean newUser (String firstName, String lastName, String email, String contactNumber, String password);
 }

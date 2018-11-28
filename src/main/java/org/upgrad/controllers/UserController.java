@@ -7,6 +7,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.Console;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.upgrad.models.User;
 import org.upgrad.services.UserAuthTokenService;
 import org.upgrad.services.UserService;
@@ -72,4 +76,70 @@ public class UserController {
             return new ResponseEntity<>("You have logged out successfully!",HttpStatus.OK);}
     }
 
+    /*
+    * This endpoint is to handle new user signup.
+    *
+    */
+    @PostMapping("/signup")
+    @CrossOrigin
+    public ResponseEntity<?> signup(@RequestParam String firstName, String lastName, @RequestParam String email, @RequestParam String contactNumber, @RequestParam String password) {
+        if (userService.findUser(contactNumber)!=null) {
+            return new ResponseEntity<>("Try any other contact number, this contact number has already been registered!",HttpStatus.BAD_REQUEST);
+        }
+        else if (!isEmailValid(email)) {
+            return new ResponseEntity<>("Invalid email-id format!", HttpStatus.BAD_REQUEST);
+        }
+        else if (contactNumber.length()!=10 || !isContactNumberValid(contactNumber)) {
+            return new ResponseEntity<>("Invalid contact number!", HttpStatus.BAD_REQUEST);
+        }
+        else if (!isPasswordStrong(password)) {
+            return  new ResponseEntity<>("Weak password!", HttpStatus.BAD_REQUEST);
+        }
+        else {
+            String sha256hex = Hashing.sha256()
+                    .hashString(password, Charsets.US_ASCII)
+                    .toString();
+            userService.newUser(firstName, lastName, email, contactNumber, sha256hex);
+            return new ResponseEntity<>("User with contact number " + contactNumber + " successfully registered!", HttpStatus.CREATED);
+        }
+    }
+
+    /*
+    * Using Regex and pattern matcher to check email validity
+    */
+    public static boolean isEmailValid (String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
+
+        Pattern pat = Pattern.compile(emailRegex);
+        if (email == null)
+            return false;
+        return pat.matcher(email).matches();
+    }
+
+    /*
+     * Using Regex and pattern matcher to check contact number validity
+     */
+    public static boolean isContactNumberValid (String contactNumber) {
+        try {
+            Integer.parseInt(contactNumber);
+        } catch (NumberFormatException ex) {
+            return false;
+        }
+        return true;
+    }
+
+    /*
+     * Using Regex and pattern matcher to check password strength
+     */
+    public static boolean isPasswordStrong (String password) {
+        String passwordRegex = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[#@$%&*!^]).{8,}$";
+        Pattern pat = Pattern.compile(passwordRegex );
+        if (password == null)
+            return false;
+
+        return pat.matcher(password).matches();
+    }
 }
