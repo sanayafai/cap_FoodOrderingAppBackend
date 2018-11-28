@@ -12,8 +12,11 @@ import java.util.Set;
  * RestaurantResponse class contain all the attributes that are to be returned as a response.
  * Here getter, setter and constructor are defined for this response class.
  */
+@Entity
+@Table(name = "restaurant")
 public class RestaurantResponse {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String restaurantName;
@@ -22,13 +25,19 @@ public class RestaurantResponse {
 
     private Double userRating;
 
+    @Column(name = "average_price_for_two")
     private Integer avgPrice;
 
+    @Column(name = "number_of_users_rated")
     private Integer numberUsersRated;
 
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id", nullable = false)
     private Address address;
 
-    private String categories;
+    //@JsonIgnore
+   // private String categories;
 
     public RestaurantResponse(Integer id, String restaurantName, String photoUrl, Double userRating, Integer avgPrice, Integer numberUsersRated, Address address, String categories) {
         this.id = id;
@@ -38,7 +47,7 @@ public class RestaurantResponse {
         this.avgPrice = avgPrice;
         this.numberUsersRated = numberUsersRated;
         this.address = address;
-        this.categories = categories;
+       // this.categories = categories;
     }
 
     public RestaurantResponse() {
@@ -100,11 +109,11 @@ public class RestaurantResponse {
         this.address = address;
     }
 
-    public String getCategories() {
+   /* public String getCategories() {
         return categories;
     }
 
     public void setCategories(String categories) {
         this.categories = categories;
-    }
+    }*/
 }

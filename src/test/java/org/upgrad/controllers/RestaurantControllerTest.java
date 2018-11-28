@@ -4,6 +4,7 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.omg.CORBA.PUBLIC_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -11,11 +12,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.upgrad.models.Restaurant;
+import org.upgrad.models.User;
 import org.upgrad.models.UserAuthToken;
+import org.upgrad.repositories.RestaurantRepository;
+import org.upgrad.repositories.UserRepository;
 import org.upgrad.requestResponseEntity.RestaurantResponse;
 import org.upgrad.requestResponseEntity.RestaurantResponseCategorySet;
 import org.upgrad.services.RestaurantService;
 import org.upgrad.services.UserAuthTokenService;
+import org.upgrad.services.UserService;
 
 import java.util.List;
 
