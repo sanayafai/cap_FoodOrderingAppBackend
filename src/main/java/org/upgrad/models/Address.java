@@ -1,9 +1,6 @@
 package org.upgrad.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Address {
@@ -15,15 +12,20 @@ public class Address {
     private String city;
     private String zipcode;
 
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id", nullable = false)
+    private States state;
+
     public Address() {
     }
 
-    public Address(String flatBuilNumber, String locality, String city, String zipcode) {
-
+    public Address(Integer id, String flatBuilNumber, String locality, String city, String zipcode, States state) {
+        this.id = id;
         this.flatBuilNumber = flatBuilNumber;
         this.locality = locality;
         this.city = city;
         this.zipcode = zipcode;
+        this.state = state;
     }
 
     public Integer getId() {
@@ -64,5 +66,13 @@ public class Address {
 
     public void setZipcode(String zipcode) {
         this.zipcode = zipcode;
+    }
+
+    public States getState() {
+        return state;
+    }
+
+    public void setState(States state) {
+        this.state = state;
     }
 }

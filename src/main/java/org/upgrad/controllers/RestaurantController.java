@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.upgrad.models.Restaurant;
 import org.upgrad.requestResponseEntity.RestaurantResponse;
 import org.upgrad.services.RestaurantService;
 
@@ -20,10 +21,11 @@ public class RestaurantController {
 
     @Autowired
     RestaurantService restaurantService;
+
     @GetMapping("")
     public ResponseEntity<?> getAllRestaurant(){
 
-        List<RestaurantResponse> restauranList = restaurantService.getAllRestaurant();
-        return new ResponseEntity<>(restauranList,  HttpStatus.OK);
+        List<RestaurantResponse> restaurantResponseList = restaurantService.getAllRestaurant();
+        return new ResponseEntity<>(restaurantResponseList,  HttpStatus.OK);
     }
 }

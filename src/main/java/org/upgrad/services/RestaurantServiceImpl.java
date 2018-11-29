@@ -2,22 +2,46 @@ package org.upgrad.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.upgrad.models.Address;
+import org.upgrad.models.Category;
 import org.upgrad.models.Restaurant;
 import org.upgrad.repositories.RestaurantRepository;
 import org.upgrad.requestResponseEntity.RestaurantResponse;
 import org.upgrad.requestResponseEntity.RestaurantResponseCategorySet;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class RestaurantServiceImpl implements RestaurantService{
+public class RestaurantServiceImpl implements RestaurantService {
 
     @Autowired
-    private  RestaurantRepository restaurantRepository;
+    private RestaurantRepository restaurantRepository;
+
     @Override
     public List<RestaurantResponse> getAllRestaurant() {
-        //return null;
-        return restaurantRepository.findAllRestaurant();
+        List<RestaurantResponse> restaurantResponseList = new ArrayList<>();
+        List<Restaurant> restaurants = restaurantRepository.findAllRestaurant();
+
+        restaurants.forEach(restaurant -> {
+            String categories = "";
+            int count = 0;
+            for (Category category :
+                    restaurant.getCategories()) {
+               if(count++ < restaurant.getCategories().size()-1) {
+                   categories += category.getCategoryName() + ", ";
+               }else{
+                   categories += category.getCategoryName() + "";
+               }
+            }
+
+            RestaurantResponse res = new RestaurantResponse(restaurant.getId(), restaurant.getRestaurantName(),
+                    restaurant.getPhotoUrl(), restaurant.getUserRating(), restaurant.getAvgPrice(),
+                    restaurant.getNumberUsersRated(), restaurant.getAddress(), categories);
+            restaurantResponseList.add(res);
+
+        });
+        return restaurantResponseList;
     }
 
     @Override
