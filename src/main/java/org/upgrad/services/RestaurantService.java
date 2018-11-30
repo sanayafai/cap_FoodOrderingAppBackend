@@ -17,9 +17,9 @@ public interface RestaurantService {
 
     List<RestaurantResponse> getAllRestaurant();
 
-    List<RestaurantResponse> getRestaurantByName(String kcf);
+    List<RestaurantResponse> getRestaurantByName(String restaurantName);
 
-    List<RestaurantResponse> getRestaurantByCategory(String indean);
+    List<RestaurantResponse> getRestaurantByCategory(String categoryName);
 
     RestaurantResponseCategorySet getRestaurantDetails(int i);
 

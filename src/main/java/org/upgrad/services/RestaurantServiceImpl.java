@@ -23,7 +23,9 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Autowired
     private RestaurantRepository restaurantRepository;
+
     private List<RestaurantResponse> restaurantResponseList;
+
     private List<Restaurant> restaurants;
 
     @Override
@@ -34,15 +36,17 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public List<RestaurantResponse> getRestaurantByName(String kcf) {
-        restaurants = restaurantRepository.findRestaurantByName(kcf);
+    public List<RestaurantResponse> getRestaurantByName(String restaurantName) {
+        restaurants = restaurantRepository.findRestaurantByName(restaurantName);
         this.getRestaurantResponseList(restaurants);
         return restaurantResponseList;
     }
 
     @Override
-    public List<RestaurantResponse> getRestaurantByCategory(String indean) {
-        return null;
+    public List<RestaurantResponse> getRestaurantByCategory(String categoryName) {
+        restaurants = restaurantRepository.findRestaurantByCategory(categoryName);
+        this.getRestaurantResponseList(restaurants);
+        return restaurantResponseList;
     }
 
     @Override
