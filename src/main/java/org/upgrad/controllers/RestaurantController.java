@@ -76,14 +76,15 @@ public class RestaurantController {
      * @param restaurantId restaurant id  for search
      * @return JSON response contains matched  restaurant details
      */
-    @GetMapping("/restaurant/{restaurantId}")
+    @GetMapping("/{restaurantId}")
     public ResponseEntity<?> getResturantsById(@PathVariable("restaurantId") int restaurantId) {
         RestaurantResponseCategorySet restaurantResponseCategorySet = restaurantService.getRestaurantDetails(restaurantId);
-        if (restaurantResponseList == null)
+
+        if (restaurantResponseCategorySet == null)
             return new ResponseEntity<>("No Restaurant by this id!", HttpStatus.NOT_FOUND);
-        else {
+        else
             return new ResponseEntity<>(restaurantResponseCategorySet, HttpStatus.OK);
-        }
+
     }
 }
 
