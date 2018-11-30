@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.upgrad.requestResponseEntity.RestaurantResponse;
+import org.upgrad.requestResponseEntity.RestaurantResponseCategorySet;
 import org.upgrad.services.RestaurantService;
 
 import java.util.List;
@@ -65,6 +66,23 @@ public class RestaurantController {
             return new ResponseEntity<>("No Restaurant under this category!", HttpStatus.NOT_FOUND);
         else {
             return new ResponseEntity<>(restaurantResponseList, HttpStatus.OK);
+        }
+    }
+
+    /**
+     * This endpoint  retrieves the matched restaurant by its  id    and display the response in a JSON format
+     * with the corresponding HTTP status.
+     *
+     * @param restaurantId restaurant id  for search
+     * @return JSON response contains matched  restaurant details
+     */
+    @GetMapping("/restaurant/{restaurantId}")
+    public ResponseEntity<?> getResturantsById(@PathVariable("restaurantId") int restaurantId) {
+        RestaurantResponseCategorySet restaurantResponseCategorySet = restaurantService.getRestaurantDetails(restaurantId);
+        if (restaurantResponseList == null)
+            return new ResponseEntity<>("No Restaurant by this id!", HttpStatus.NOT_FOUND);
+        else {
+            return new ResponseEntity<>(restaurantResponseCategorySet, HttpStatus.OK);
         }
     }
 }
