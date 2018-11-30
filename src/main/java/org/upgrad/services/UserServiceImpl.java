@@ -49,4 +49,14 @@ public class UserServiceImpl implements UserService{
     public User findUserById (int id) {
         return userRepository.findUserById(id);
     }
+
+    @Override
+    public String findUserPwdById(int id) {
+        return userRepository.findUserPwdById(id);
+    }
+
+    @Override
+    public void updatePwd(String newPassword, int id) {
+        userRepository.updatePwd(newPassword, id);
+    }
 }

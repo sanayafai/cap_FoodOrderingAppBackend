@@ -17,4 +17,6 @@ public interface UserService {
     Boolean newUser (String firstName, String lastName, String email, String contactNumber, String password);
     void editUser (String firstName, String lastName, int id);
     User findUserById (int id);
+    String findUserPwdById(int id);
+    void updatePwd(String newPassword, int id);
 }
