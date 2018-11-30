@@ -12,6 +12,12 @@ import org.upgrad.requestResponseEntity.RestaurantResponseCategorySet;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This RestaurantServiceImpl interface implementation gives the list of all the service methods implementation
+ * * Controller class will be calling the service methods by this class.
+ *
+ * @author Chnadra Prakash Tekam
+ */
 @Service
 public class RestaurantServiceImpl implements RestaurantService {
 
@@ -29,11 +35,11 @@ public class RestaurantServiceImpl implements RestaurantService {
             restaurant.getCategories().sort((a, b) -> a.getCategoryName().compareTo(b.getCategoryName()));
             for (Category category :
                     restaurant.getCategories()) {
-               if(count++ < restaurant.getCategories().size()-1) {
-                   categories += category.getCategoryName() + ", ";
-               }else{
-                   categories += category.getCategoryName() + "";
-               }
+                if (count++ < restaurant.getCategories().size() - 1) {
+                    categories += category.getCategoryName() + ", ";
+                } else {
+                    categories += category.getCategoryName() + "";
+                }
             }
 
             RestaurantResponse res = new RestaurantResponse(restaurant.getId(), restaurant.getRestaurantName(),
