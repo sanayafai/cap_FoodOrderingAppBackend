@@ -26,6 +26,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         restaurants.forEach(restaurant -> {
             String categories = "";
             int count = 0;
+            restaurant.getCategories().sort((a, b) -> a.getCategoryName().compareTo(b.getCategoryName()));
             for (Category category :
                     restaurant.getCategories()) {
                if(count++ < restaurant.getCategories().size()-1) {
