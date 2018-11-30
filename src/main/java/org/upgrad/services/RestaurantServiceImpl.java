@@ -2,7 +2,6 @@ package org.upgrad.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.upgrad.models.Address;
 import org.upgrad.models.Category;
 import org.upgrad.models.Restaurant;
 import org.upgrad.repositories.RestaurantRepository;
@@ -10,6 +9,7 @@ import org.upgrad.requestResponseEntity.RestaurantResponse;
 import org.upgrad.requestResponseEntity.RestaurantResponseCategorySet;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -23,37 +23,21 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Autowired
     private RestaurantRepository restaurantRepository;
+    private List<RestaurantResponse> restaurantResponseList;
+    private List<Restaurant> restaurants;
 
     @Override
     public List<RestaurantResponse> getAllRestaurant() {
-        List<RestaurantResponse> restaurantResponseList = new ArrayList<>();
-        List<Restaurant> restaurants = restaurantRepository.findAllRestaurant();
-
-        restaurants.forEach(restaurant -> {
-            String categories = "";
-            int count = 0;
-            restaurant.getCategories().sort((a, b) -> a.getCategoryName().compareTo(b.getCategoryName()));
-            for (Category category :
-                    restaurant.getCategories()) {
-                if (count++ < restaurant.getCategories().size() - 1) {
-                    categories += category.getCategoryName() + ", ";
-                } else {
-                    categories += category.getCategoryName() + "";
-                }
-            }
-
-            RestaurantResponse res = new RestaurantResponse(restaurant.getId(), restaurant.getRestaurantName(),
-                    restaurant.getPhotoUrl(), restaurant.getUserRating(), restaurant.getAvgPrice(),
-                    restaurant.getNumberUsersRated(), restaurant.getAddress(), categories);
-            restaurantResponseList.add(res);
-
-        });
+        restaurants = restaurantRepository.findAllRestaurant();
+        this.getRestaurantResponseList(restaurants);
         return restaurantResponseList;
     }
 
     @Override
     public List<RestaurantResponse> getRestaurantByName(String kcf) {
-        return null;
+        restaurants = restaurantRepository.findRestaurantByName(kcf);
+        this.getRestaurantResponseList(restaurants);
+        return restaurantResponseList;
     }
 
     @Override
@@ -69,5 +53,28 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public Restaurant updateRating(int i, int i1) {
         return null;
+    }
+
+
+    private void getRestaurantResponseList(List<Restaurant> restaurants) {
+        restaurantResponseList = new ArrayList<>();
+        restaurants.forEach(restaurant -> {
+            StringBuilder categories = new StringBuilder();
+            int count = 0;
+            restaurant.getCategories().sort(Comparator.comparing(Category::getCategoryName));
+            for (Category category :
+                    restaurant.getCategories()) {
+                if (count++ < restaurant.getCategories().size() - 1) {
+                    categories.append(category.getCategoryName()).append(", ");
+                } else {
+                    categories.append(category.getCategoryName());
+                }
+            }
+
+            RestaurantResponse res = new RestaurantResponse(restaurant.getId(), restaurant.getRestaurantName(),
+                    restaurant.getPhotoUrl(), restaurant.getUserRating(), restaurant.getAvgPrice(),
+                    restaurant.getNumberUsersRated(), restaurant.getAddress(), categories.toString());
+            restaurantResponseList.add(res);
+        });
     }
 }
