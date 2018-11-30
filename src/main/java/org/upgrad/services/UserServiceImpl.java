@@ -7,6 +7,7 @@ import org.upgrad.repositories.UserAuthTokenRepository;
 import org.upgrad.repositories.UserRepository;
 
 import javax.transaction.Transactional;
+import java.sql.ResultSet;
 import java.util.Optional;
 
 @Service
@@ -39,6 +40,13 @@ public class UserServiceImpl implements UserService{
         return success;
     }
 
+    @Override
+    public void editUser (String firstName, String lastName, int id) {
+        userRepository.editUser(firstName, lastName, id);
+    }
 
-
+    @Override
+    public User findUserById (int id) {
+        return userRepository.findUserById(id);
+    }
 }

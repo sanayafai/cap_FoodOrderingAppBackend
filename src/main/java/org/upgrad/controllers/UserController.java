@@ -9,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.Console;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.upgrad.models.User;
@@ -30,6 +32,34 @@ public class UserController {
 
     @Autowired
     private UserAuthTokenService userAuthTokenService;
+
+    /*
+     * This endpoint is to handle new user signup.
+     *
+     */
+    @PostMapping("/signup")
+    @CrossOrigin
+    public ResponseEntity<?> signup(@RequestParam String firstName, String lastName, @RequestParam String email, @RequestParam String contactNumber, @RequestParam String password) {
+        if (userService.findUser(contactNumber)!=null) {
+            return new ResponseEntity<>("Try any other contact number, this contact number has already been registered!",HttpStatus.BAD_REQUEST);
+        }
+        else if (!isEmailValid(email)) {
+            return new ResponseEntity<>("Invalid email-id format!", HttpStatus.BAD_REQUEST);
+        }
+        else if (contactNumber.length()!=10 || !isContactNumberValid(contactNumber)) {
+            return new ResponseEntity<>("Invalid contact number!", HttpStatus.BAD_REQUEST);
+        }
+        else if (!isPasswordStrong(password)) {
+            return  new ResponseEntity<>("Weak password!", HttpStatus.BAD_REQUEST);
+        }
+        else {
+            String sha256hex = Hashing.sha256()
+                    .hashString(password, Charsets.US_ASCII)
+                    .toString();
+            userService.newUser(firstName, lastName, email, contactNumber, sha256hex);
+            return new ResponseEntity<>("User with contact number " + contactNumber + " successfully registered!", HttpStatus.CREATED);
+        }
+    }
 
     /*
     * This endpoint is used to login a user.
@@ -77,32 +107,24 @@ public class UserController {
     }
 
     /*
-    * This endpoint is to handle new user signup.
-    *
-    */
-    @PostMapping("/signup")
+     * This endpoint is used to update user first name and last name
+     * Authentication is required to access this endpoint, so accessToken is taken as request header to make sure user is authenticated.
+     */
+    @PutMapping("/user")
     @CrossOrigin
-    public ResponseEntity<?> signup(@RequestParam String firstName, String lastName, @RequestParam String email, @RequestParam String contactNumber, @RequestParam String password) {
-        if (userService.findUser(contactNumber)!=null) {
-            return new ResponseEntity<>("Try any other contact number, this contact number has already been registered!",HttpStatus.BAD_REQUEST);
-        }
-        else if (!isEmailValid(email)) {
-            return new ResponseEntity<>("Invalid email-id format!", HttpStatus.BAD_REQUEST);
-        }
-        else if (contactNumber.length()!=10 || !isContactNumberValid(contactNumber)) {
-            return new ResponseEntity<>("Invalid contact number!", HttpStatus.BAD_REQUEST);
-        }
-        else if (!isPasswordStrong(password)) {
-            return  new ResponseEntity<>("Weak password!", HttpStatus.BAD_REQUEST);
-        }
-        else {
-            String sha256hex = Hashing.sha256()
-                    .hashString(password, Charsets.US_ASCII)
-                    .toString();
-            userService.newUser(firstName, lastName, email, contactNumber, sha256hex);
-            return new ResponseEntity<>("User with contact number " + contactNumber + " successfully registered!", HttpStatus.CREATED);
+    public ResponseEntity<?> updateUserName (@RequestParam String firstName, String lastName, @RequestHeader String accessToken) {
+        if(userAuthTokenService.isUserLoggedIn(accessToken) == null){
+            return new ResponseEntity<>("Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
+        } else if(userAuthTokenService.isUserLoggedIn(accessToken).getLogoutAt()!=null){
+            return new ResponseEntity<>("You have already logged out. Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
+        }  else {
+            int userId = userAuthTokenService.getUserIdByAuth(accessToken);
+            userService.editUser(firstName, lastName, userId);
+            User user = userService.findUserById (userId);
+            return new ResponseEntity<>(user, HttpStatus.OK);
         }
     }
+
 
     /*
     * Using Regex and pattern matcher to check email validity

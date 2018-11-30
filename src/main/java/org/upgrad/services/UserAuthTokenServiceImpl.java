@@ -43,4 +43,9 @@ public class UserAuthTokenServiceImpl implements UserAuthTokenService {
         return userAuthTokenRepository.isUserLoggedIn(accessToken);
     }
 
+    public int getUserIdByAuth (String accessToken) {
+        return userAuthTokenRepository.getUserIdByAuth(accessToken);
+    }
+
+
 }
