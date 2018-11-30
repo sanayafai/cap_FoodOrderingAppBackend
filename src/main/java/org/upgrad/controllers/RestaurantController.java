@@ -3,10 +3,7 @@ package org.upgrad.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.upgrad.models.Restaurant;
+import org.springframework.web.bind.annotation.*;
 import org.upgrad.requestResponseEntity.RestaurantResponse;
 import org.upgrad.services.RestaurantService;
 
@@ -20,12 +17,56 @@ import java.util.List;
 public class RestaurantController {
 
     @Autowired
-    RestaurantService restaurantService;
+    private RestaurantService restaurantService;
+    private List<RestaurantResponse> restaurantResponseList;
 
+    /**
+     * This endpoint  retrieves all the restaurants in order of their ratings and display the response in a JSON format
+     * with the corresponding HTTP status.
+     *
+     * @return JSON response contains all restaurants details
+     */
     @GetMapping("")
-    public ResponseEntity<?> getAllRestaurant(){
+    @CrossOrigin
+    public ResponseEntity<?> getAllRestaurant() {
 
-        List<RestaurantResponse> restaurantResponseList = restaurantService.getAllRestaurant();
-        return new ResponseEntity<>(restaurantResponseList,  HttpStatus.OK);
+        restaurantResponseList = restaurantService.getAllRestaurant();
+        return new ResponseEntity<>(restaurantResponseList, HttpStatus.OK);
+    }
+
+    /**
+     * This endpoint  retrieves all the matched restaurants by its name  and display the response in a JSON format
+     * with the corresponding HTTP status.
+     *
+     * @param reastaurantName restaurant name for search
+     * @return JSON response contains matched  restaurants details
+     */
+    @GetMapping("/name/{reastaurantName}")
+    @CrossOrigin
+    public ResponseEntity<?> getRestaurantsByName(@PathVariable("reastaurantName") String reastaurantName) {
+        restaurantResponseList = restaurantService.getRestaurantByName(reastaurantName);
+        if (restaurantResponseList == null)
+            return new ResponseEntity<>("No Restaurant by this name!", HttpStatus.NOT_FOUND);
+        else
+            return new ResponseEntity<>(restaurantResponseList, HttpStatus.OK);
+    }
+
+    /**
+     * This endpoint  retrieves all the matched restaurants by category name   and display the response in a JSON format
+     * with the corresponding HTTP status.
+     *
+     * @param categoryName category name for search
+     * @return JSON response contains matched  restaurants details
+     */
+    @GetMapping("/category/{categoryName}")
+    public ResponseEntity<?> getResturantsByCategory(@PathVariable("categoryName") String categoryName) {
+        restaurantResponseList = restaurantService.getRestaurantByCategory(categoryName);
+        if (restaurantResponseList == null)
+            return new ResponseEntity<>("No Restaurant by this category!", HttpStatus.NOT_FOUND);
+        else {
+            return new ResponseEntity<>(restaurantResponseList, HttpStatus.OK);
+        }
     }
 }
+
+
