@@ -23,5 +23,5 @@ public interface RestaurantService {
 
     RestaurantResponseCategorySet getRestaurantDetails(int id);
 
-    Restaurant updateRating(int i, int i1);
+    Restaurant updateRating(int rating, int id);
 }

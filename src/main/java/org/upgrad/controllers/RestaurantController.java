@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.upgrad.models.Restaurant;
 import org.upgrad.requestResponseEntity.RestaurantResponse;
 import org.upgrad.requestResponseEntity.RestaurantResponseCategorySet;
 import org.upgrad.services.RestaurantService;
@@ -66,6 +67,7 @@ public class RestaurantController {
      * @return JSON response contains matched  restaurants details
      */
     @GetMapping("/category/{categoryName}")
+    @CrossOrigin
     public ResponseEntity<?> getResturantsByCategory(@PathVariable("categoryName") String categoryName) {
         restaurantResponseList = restaurantService.getRestaurantByCategory(categoryName);
         if (restaurantResponseList == null)
@@ -83,6 +85,7 @@ public class RestaurantController {
      * @return JSON response contains matched  restaurant details
      */
     @GetMapping("/{restaurantId}")
+    @CrossOrigin
     public ResponseEntity<?> getResturantsById(@PathVariable("restaurantId") int restaurantId) {
         RestaurantResponseCategorySet restaurantResponseCategorySet = restaurantService.getRestaurantDetails(restaurantId);
 
@@ -101,6 +104,7 @@ public class RestaurantController {
      * @return JSON response contains matched  restaurant details
      */
     @PutMapping("/{restaurantId}")
+    @CrossOrigin
     public ResponseEntity<?> updateRestaurant(@PathVariable("restaurantId") int restaurantId,
                                               @RequestParam("rating") String rating, @RequestHeader String accessToken) {
 
@@ -112,9 +116,12 @@ public class RestaurantController {
             RestaurantResponseCategorySet restaurantResponseCategorySet = restaurantService.getRestaurantDetails(restaurantId);
 
             if (restaurantResponseCategorySet == null) {
-                return new ResponseEntity<>("YNo Restaurant by this id!", HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("No Restaurant by this id!", HttpStatus.NOT_FOUND);
+            }else {
+                Restaurant restaurant = restaurantService.updateRating(Integer.parseInt(rating), restaurantId);
+                return new ResponseEntity<>(restaurant, HttpStatus.OK);
             }
-            return new ResponseEntity<>(restaurantResponseCategorySet, HttpStatus.OK);
+
         }
     }
 

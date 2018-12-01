@@ -72,8 +72,14 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public Restaurant updateRating(int i, int i1) {
-        return null;
+    public Restaurant updateRating(int rating, int id) {
+        Restaurant restaurant =null;
+        int count = restaurantRepository.updateRating(rating, id);
+        System.out.println("count" + count);
+        if (count > 0){
+            restaurant = restaurantRepository.findRestaurantById(id);
+        }
+        return restaurant;
     }
 
 
