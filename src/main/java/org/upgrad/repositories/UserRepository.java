@@ -24,7 +24,7 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     User findUser(String contactNumber);
 
     @Query(nativeQuery = true,value = "SELECT * FROM USERS WHERE id=?1")
-    User findUserById(int id);
+    User getUserById(int id);
 
     @Transactional
     @Modifying
@@ -34,7 +34,7 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     @Transactional
     @Modifying
     @Query (nativeQuery = true,value = "UPDATE USERS SET firstname=?1, lastname=?2 WHERE id=?3")
-    void editUser (String firstName, String lastName, int id);
+    User updateUser (String firstName, String lastName, int id);
 
     @Query(nativeQuery = true,value="SELECT PASSWORD FROM USERS WHERE id=?1")
     String findUserPwdById(int id);

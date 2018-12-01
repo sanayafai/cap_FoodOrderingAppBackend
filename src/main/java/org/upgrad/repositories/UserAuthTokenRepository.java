@@ -21,5 +21,5 @@ public interface UserAuthTokenRepository extends CrudRepository<UserAuthToken, I
     void removeAuthToken( String accessToken);
 
     @Query(nativeQuery =  true,value = "select user_id from user_auth_token where access_token=?1")
-    int getUserIdByAuth(String accessToken);
+    int getUserId (String accessToken);
 }

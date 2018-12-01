@@ -110,7 +110,7 @@ public class UserController {
      * This endpoint is used to update user first name and last name
      * Authentication is required to access this endpoint, so accessToken is taken as request header to make sure user is authenticated.
      */
-    @PutMapping("/user")
+    @PutMapping("")
     @CrossOrigin
     public ResponseEntity<?> updateUserName (@RequestParam String firstName, String lastName, @RequestHeader String accessToken) {
         if(userAuthTokenService.isUserLoggedIn(accessToken) == null){
@@ -118,10 +118,42 @@ public class UserController {
         } else if(userAuthTokenService.isUserLoggedIn(accessToken).getLogoutAt()!=null){
             return new ResponseEntity<>("You have already logged out. Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
         }  else {
-            int userId = userAuthTokenService.getUserIdByAuth(accessToken);
-            userService.editUser(firstName, lastName, userId);
-            User user = userService.findUserById (userId);
-            return new ResponseEntity<>(user, HttpStatus.OK);
+            int userId = userAuthTokenService.getUserId(accessToken);
+            return new ResponseEntity<>(userService.updateUser(firstName, lastName, userId), HttpStatus.OK);
+        }
+    }
+
+    /*
+     * This endpoint is used to update user password
+     * Authentication is required to access this endpoint, so accessToken is taken as request header to make sure user is authenticated.
+     */
+    @PutMapping("/password")
+    @CrossOrigin
+    public ResponseEntity<?> updatePassword (@RequestParam String oldPassword, @RequestParam String newPassword, @RequestHeader String accessToken) {
+        //Converting oldPassword and newPassword into Sha 256
+        String oldPwdSha = Hashing.sha256()
+                .hashString(oldPassword, Charsets.US_ASCII)
+                .toString();
+        String newPwdSha = Hashing.sha256()
+                .hashString(newPassword, Charsets.US_ASCII)
+                .toString();
+        if(userAuthTokenService.isUserLoggedIn(accessToken) == null){
+            return new ResponseEntity<>("Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
+        } else if(userAuthTokenService.isUserLoggedIn(accessToken).getLogoutAt()!=null){
+            return new ResponseEntity<>("You have already logged out. Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
+        } else {
+            // Looking for userId ONLY IF user is logged in.
+            int userId = userAuthTokenService.getUserId(accessToken);
+            // Checking IF old password matches the password in DB.
+            if (!oldPwdSha.equals(userService.findUserPwdById(userId))) {
+                System.out.println(oldPwdSha + " " + userService.findUserPwdById(userId));
+                return new ResponseEntity<>("Your password did not match to your old password!", HttpStatus.BAD_REQUEST);
+            } else if (!isPasswordStrong(newPassword)) { // Checking IF the new password is strong ONLY IF old password matches the password in DB.
+                return new ResponseEntity<>("Weak password!", HttpStatus.BAD_REQUEST);
+            } else { // Updating passsword
+                userService.updatePwd(newPwdSha, userId);
+                return new ResponseEntity<>("Password updated successfully!", HttpStatus.OK);
+            }
         }
     }
 

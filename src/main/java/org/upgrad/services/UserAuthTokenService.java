@@ -14,5 +14,5 @@ public interface UserAuthTokenService {
 
     UserAuthToken isUserLoggedIn(String accessToken);
 
-    int getUserIdByAuth (String accessToken);
+    int getUserId (String accessToken);
 }

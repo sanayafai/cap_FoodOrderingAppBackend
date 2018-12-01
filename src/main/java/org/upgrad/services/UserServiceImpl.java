@@ -41,13 +41,13 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void editUser (String firstName, String lastName, int id) {
-        userRepository.editUser(firstName, lastName, id);
+    public User updateUser (String firstName, String lastName, int id) {
+       return userRepository.updateUser(firstName, lastName, id);
     }
 
     @Override
-    public User findUserById (int id) {
-        return userRepository.findUserById(id);
+    public User getUserById (int id) {
+        return userRepository.getUserById(id);
     }
 
     @Override
