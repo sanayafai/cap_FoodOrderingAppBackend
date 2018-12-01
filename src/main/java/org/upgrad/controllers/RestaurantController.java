@@ -86,6 +86,30 @@ public class RestaurantController {
             return new ResponseEntity<>(restaurantResponseCategorySet, HttpStatus.OK);
 
     }
+
+    /**
+     * This endpoint  retrieves the matched restaurant by its  id    and display the response in a JSON format
+     * with the corresponding HTTP status.
+     *
+     * @param restaurantId restaurant id  for search
+     * @return JSON response contains matched  restaurant details
+     */
+    @PutMapping("/{restaurantId}")
+    public ResponseEntity<?> updateRestaurant(@PathVariable("restaurantId") int restaurantId,
+                                              @RequestParam("rating") String rating) {
+        RestaurantResponseCategorySet restaurantResponseCategorySet = restaurantService.getRestaurantDetails(restaurantId);
+
+        if (restaurantResponseCategorySet == null)
+            return new ResponseEntity<>("Please Login first to access this endpoint!", HttpStatus.NOT_FOUND);
+        else
+            return new ResponseEntity<>("You have already logged out. Please Login first to access this endpoint!",
+                    HttpStatus.OK);
+
+        //No Restaurant by this id!
+
+        //
+
+    }
 }
 
 
