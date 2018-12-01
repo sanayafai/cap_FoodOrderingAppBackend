@@ -7,6 +7,7 @@ import org.upgrad.repositories.UserAuthTokenRepository;
 import org.upgrad.repositories.UserRepository;
 
 import javax.transaction.Transactional;
+import java.sql.ResultSet;
 import java.util.Optional;
 
 @Service
@@ -29,4 +30,33 @@ public class UserServiceImpl implements UserService{
         return userRepository.findUser(contactNumber);
     }
 
+    @Override
+    public Boolean newUser (String firstName, String lastName, String email, String contactNumber, String password) {
+        Boolean success = false;
+        userRepository.newUser(firstName, lastName, email, contactNumber, password);
+        if (userRepository.findUser(contactNumber)!=null) {
+            success = true;
+        }
+        return success;
+    }
+
+    @Override
+    public User updateUser (String firstName, String lastName, int id) {
+       return userRepository.updateUser(firstName, lastName, id);
+    }
+
+    @Override
+    public User getUserById (int id) {
+        return userRepository.getUserById(id);
+    }
+
+    @Override
+    public String findUserPwdById(int id) {
+        return userRepository.findUserPwdById(id);
+    }
+
+    @Override
+    public void updatePwd(String newPassword, int id) {
+        userRepository.updatePwd(newPassword, id);
+    }
 }
