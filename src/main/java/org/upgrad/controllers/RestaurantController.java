@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.upgrad.requestResponseEntity.RestaurantResponse;
 import org.upgrad.requestResponseEntity.RestaurantResponseCategorySet;
 import org.upgrad.services.RestaurantService;
+import org.upgrad.services.UserAuthTokenService;
 
 import java.util.List;
 
@@ -19,7 +20,12 @@ public class RestaurantController {
 
     @Autowired
     private RestaurantService restaurantService;
+
+    @Autowired
+    private UserAuthTokenService userAuthTokenService;
+
     private List<RestaurantResponse> restaurantResponseList;
+
 
     /**
      * This endpoint  retrieves all the restaurants in order of their ratings and display the response in a JSON format
@@ -96,20 +102,24 @@ public class RestaurantController {
      */
     @PutMapping("/{restaurantId}")
     public ResponseEntity<?> updateRestaurant(@PathVariable("restaurantId") int restaurantId,
-                                              @RequestParam("rating") String rating) {
-        RestaurantResponseCategorySet restaurantResponseCategorySet = restaurantService.getRestaurantDetails(restaurantId);
+                                              @RequestParam("rating") String rating, @RequestHeader String accessToken) {
 
-        if (restaurantResponseCategorySet == null)
-            return new ResponseEntity<>("Please Login first to access this endpoint!", HttpStatus.NOT_FOUND);
-        else
-            return new ResponseEntity<>("You have already logged out. Please Login first to access this endpoint!",
-                    HttpStatus.OK);
+        if (userAuthTokenService.isUserLoggedIn(accessToken) == null) {
+            return new ResponseEntity<>("Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
+        } else if (userAuthTokenService.isUserLoggedIn(accessToken).getLogoutAt() != null) {
+            return new ResponseEntity<>("You have already logged out. Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
+        } else {
+            RestaurantResponseCategorySet restaurantResponseCategorySet = restaurantService.getRestaurantDetails(restaurantId);
 
-        //No Restaurant by this id!
-
-        //
-
+            if (restaurantResponseCategorySet == null) {
+                return new ResponseEntity<>("YNo Restaurant by this id!", HttpStatus.NOT_FOUND);
+            }
+            return new ResponseEntity<>(restaurantResponseCategorySet, HttpStatus.OK);
+        }
     }
+
+
 }
+
 
 
