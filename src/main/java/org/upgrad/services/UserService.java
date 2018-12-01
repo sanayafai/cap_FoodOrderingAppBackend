@@ -3,6 +3,7 @@ package org.upgrad.services;
 import org.upgrad.models.User;
 import org.upgrad.models.UserAuthToken;
 
+import java.sql.ResultSet;
 import java.util.Optional;
 
 /*
@@ -12,6 +13,10 @@ import java.util.Optional;
 public interface UserService {
 
     String findUserPassword(String contactNumber);
-
     User findUser(String contactNumber);
+    Boolean newUser (String firstName, String lastName, String email, String contactNumber, String password);
+    User updateUser (String firstName, String lastName, int id);
+    User getUserById (int id);
+    String findUserPwdById(int id);
+    void updatePwd(String newPassword, int id);
 }
