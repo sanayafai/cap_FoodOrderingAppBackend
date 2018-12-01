@@ -1,9 +1,11 @@
 package org.upgrad.repositories;
 
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import org.upgrad.models.Restaurant;
 
 import java.util.List;
@@ -28,4 +30,9 @@ public interface RestaurantRepository extends CrudRepository<Restaurant, Integer
 
     @Query(nativeQuery = true, value = "SELECT * FROM RESTAURANT WHERE id=?1")
     Restaurant findRestaurantById(int id);
+
+    @Transactional
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query(nativeQuery = true, value = "UPDATE RESTAURANT SET user_rating = ?1 WHERE id=?2")
+    int updateRating(int rating, int id);
 }

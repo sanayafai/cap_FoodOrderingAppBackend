@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.upgrad.models.Restaurant;
 import org.upgrad.requestResponseEntity.RestaurantResponse;
 import org.upgrad.requestResponseEntity.RestaurantResponseCategorySet;
 import org.upgrad.services.RestaurantService;
+import org.upgrad.services.UserAuthTokenService;
 
 import java.util.List;
 
@@ -19,7 +21,12 @@ public class RestaurantController {
 
     @Autowired
     private RestaurantService restaurantService;
+
+    @Autowired
+    private UserAuthTokenService userAuthTokenService;
+
     private List<RestaurantResponse> restaurantResponseList;
+
 
     /**
      * This endpoint  retrieves all the restaurants in order of their ratings and display the response in a JSON format
@@ -60,6 +67,7 @@ public class RestaurantController {
      * @return JSON response contains matched  restaurants details
      */
     @GetMapping("/category/{categoryName}")
+    @CrossOrigin
     public ResponseEntity<?> getResturantsByCategory(@PathVariable("categoryName") String categoryName) {
         restaurantResponseList = restaurantService.getRestaurantByCategory(categoryName);
         if (restaurantResponseList == null)
@@ -77,6 +85,7 @@ public class RestaurantController {
      * @return JSON response contains matched  restaurant details
      */
     @GetMapping("/{restaurantId}")
+    @CrossOrigin
     public ResponseEntity<?> getResturantsById(@PathVariable("restaurantId") int restaurantId) {
         RestaurantResponseCategorySet restaurantResponseCategorySet = restaurantService.getRestaurantDetails(restaurantId);
 
@@ -95,21 +104,29 @@ public class RestaurantController {
      * @return JSON response contains matched  restaurant details
      */
     @PutMapping("/{restaurantId}")
+    @CrossOrigin
     public ResponseEntity<?> updateRestaurant(@PathVariable("restaurantId") int restaurantId,
-                                              @RequestParam("rating") String rating) {
-        RestaurantResponseCategorySet restaurantResponseCategorySet = restaurantService.getRestaurantDetails(restaurantId);
+                                              @RequestParam("rating") String rating, @RequestHeader String accessToken) {
 
-        if (restaurantResponseCategorySet == null)
-            return new ResponseEntity<>("Please Login first to access this endpoint!", HttpStatus.NOT_FOUND);
-        else
-            return new ResponseEntity<>("You have already logged out. Please Login first to access this endpoint!",
-                    HttpStatus.OK);
+        if (userAuthTokenService.isUserLoggedIn(accessToken) == null) {
+            return new ResponseEntity<>("Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
+        } else if (userAuthTokenService.isUserLoggedIn(accessToken).getLogoutAt() != null) {
+            return new ResponseEntity<>("You have already logged out. Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
+        } else {
+            RestaurantResponseCategorySet restaurantResponseCategorySet = restaurantService.getRestaurantDetails(restaurantId);
 
-        //No Restaurant by this id!
+            if (restaurantResponseCategorySet == null) {
+                return new ResponseEntity<>("No Restaurant by this id!", HttpStatus.NOT_FOUND);
+            }else {
+                Restaurant restaurant = restaurantService.updateRating(Integer.parseInt(rating), restaurantId);
+                return new ResponseEntity<>(restaurant, HttpStatus.OK);
+            }
 
-        //
-
+        }
     }
+
+
 }
+
 
 
