@@ -1,24 +1,25 @@
 package org.upgrad.models;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
+@Entity
 public class OrderItem {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @OneToOne()
+    @JoinColumn(name = "id", referencedColumnName = "item_id")
     private Item item;
 
-    private  Integer quantity;
+    private Integer quantity;
 
     private Double price;
 
-    public OrderItem() {
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private Order order;
 
     public OrderItem(int id, Item item, Integer quantity, Double price) {
         this.id = id;
@@ -58,4 +59,5 @@ public class OrderItem {
     public void setPrice(Double price) {
         this.price = price;
     }
+
 }

@@ -1,14 +1,16 @@
 package org.upgrad.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.upgrad.models.Coupon;
-import org.upgrad.models.Order;
+
 import org.upgrad.repositories.CouponRepository;
 import org.upgrad.requestResponseEntity.ItemQuantity;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class OrderServiceImpl implements OrderService {
 
     @Autowired
@@ -19,10 +21,6 @@ public class OrderServiceImpl implements OrderService {
         return couponRepository.findCouponByName(couponName);
     }
 
-    @Override
-    public List<Order> getOrdersByUser(Integer userId) {
-        return null;
-    }
 
     @Override
     public Integer addOrderWithPermAddress(Integer itemId, Integer quantity, Integer userId, ArrayList<ItemQuantity> itemQuantities, double bill, Integer couponId, double v1) {

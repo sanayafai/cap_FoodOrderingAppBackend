@@ -14,18 +14,29 @@ public class Order {
 
     private double bill;
 
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id", nullable = false)
     private Coupon coupon;
 
     private double discount;
 
     private Date date;
 
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id", nullable = false)
     private Payment payment;
 
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id", nullable = false)
     private User user;
 
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id", nullable = false)
     private Address address;
 
+    @OneToMany(cascade = CascadeType.ALL,
+            mappedBy = "order"
+    )
     private List<OrderItem> orderItems;
 
     public Order() {
