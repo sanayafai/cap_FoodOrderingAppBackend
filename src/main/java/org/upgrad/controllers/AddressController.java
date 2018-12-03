@@ -91,7 +91,7 @@ public class AddressController {
                 return new ResponseEntity<>("Invalid zipcode!", HttpStatus.BAD_REQUEST);
             } else if (!isStateIdValid(stateId)) {
                 return new ResponseEntity<>("No state by this state id!", HttpStatus.BAD_REQUEST);
-            } else if (addressService.findAddressbyId(addressId)==null) {
+            } else if (addressService.getAddress(addressId)==null) {
                 return new ResponseEntity<>("No address with this address id!", HttpStatus.BAD_REQUEST);
             } else {
                 addressService.updatePermAddress(flatBuilNo, locality, city, zipcode, stateId, addressId);
@@ -103,7 +103,6 @@ public class AddressController {
     /*
      * This endpoint is to get all permanent address.
      * Requires authentication.
-     * Updates address table.
      */
     @GetMapping("/address/user")
     @CrossOrigin
@@ -115,18 +114,42 @@ public class AddressController {
             return new ResponseEntity<>("You have already logged out. Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
         } else {
             int userId = userAuthTokenService.getUserId(accessToken);
-            List<Integer> allPermAddressIdByUser = addressService.getAllPermAddIdByUser(userId);
+            List<Integer> allPermAddressIdByUser = addressService.getPermAddress(userId);
             if (allPermAddressIdByUser == null) {
                 return new ResponseEntity<>("No permanent address found!", HttpStatus.OK);
             } else {
                 List<Address> allPermAddressByUser = new ArrayList<>();
                 for (Integer addressId: allPermAddressIdByUser) {
-                    allPermAddressByUser.add(addressService.findAddressbyId(addressId));
+                    allPermAddressByUser.add(addressService.getAddress(addressId));
                 }
                 return new ResponseEntity<>(allPermAddressByUser, HttpStatus.OK);
             }
         }
     }
+
+    /*
+     * This endpoint is to delete a permanent address.
+     * Requires authentication.
+     * Takes in the address id as path variables and deletes it from the address table.
+     */
+    @DeleteMapping ("/api/address/{addressId}")
+    @CrossOrigin
+    public ResponseEntity<?> deletePermAddress (@PathVariable("addressId") int addressId, @RequestHeader String accessToken) {
+        if(userAuthTokenService.isUserLoggedIn(accessToken) == null){
+            return new ResponseEntity<>("Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
+        }
+        else if(userAuthTokenService.isUserLoggedIn(accessToken).getLogoutAt()!=null){
+            return new ResponseEntity<>("You have already logged out. Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
+        } else {
+            if (addressService.getAddress(addressId) == null) {
+                return new ResponseEntity<>("No address with this address id!", HttpStatus.BAD_REQUEST);
+            } else {
+                addressService.deletePermAddressById(addressId);
+                return new ResponseEntity<>("Address has been deleted successfully!", HttpStatus.OK);
+            }
+        }
+    }
+
 
 
     //Method to check if a zip code is a valid 6 digit number.

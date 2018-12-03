@@ -43,8 +43,8 @@ public class AddressServiceImpl implements AddressService{
     }
 
     @Override
-    public Address findAddressbyId(int addressId) {
-        return addressRepository.findAddressbyId(addressId);
+    public Address getAddress(int addressId) {
+        return addressRepository.getAddress(addressId);
     }
 
     @Override
@@ -53,7 +53,17 @@ public class AddressServiceImpl implements AddressService{
     }
 
     @Override
-    public List<Integer> getAllPermAddIdByUser (int userId) {
-        return addressRepository.getAllPermAddIdByUser(userId);
+    public List<Integer> getPermAddress (int userId) {
+        return addressRepository.getPermAddress(userId);
+    }
+
+    @Override
+    public Boolean deletePermAddressById (int addressId) {
+        Boolean success = false;
+        addressRepository.deletePermAddressById(addressId);
+        if (addressRepository.getAddress(addressId) == null) {
+            success = true;
+        }
+        return success;
     }
 }

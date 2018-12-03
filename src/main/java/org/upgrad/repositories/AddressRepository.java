@@ -27,7 +27,7 @@ public interface AddressRepository extends CrudRepository<Address, Integer> {
     void userAddressMapping (String type, Integer userId, Integer addressId);
 
     @Query(nativeQuery = true, value = "SELECT * FROM ADDRESS WHERE ID=?1" )
-    Address findAddressbyId(int addressId);
+    Address getAddress(int addressId);
 
     @Transactional
     @Modifying
@@ -35,5 +35,8 @@ public interface AddressRepository extends CrudRepository<Address, Integer> {
     void updatePermAddress (String flatBuilNumber, String locality, String city, String zipcode, Integer stateId, Integer addressId);
 
     @Query (nativeQuery = true, value = "SELECT ADDRESS_ID FROM USER_ADDRESS WHERE TYPE LIKE '%perm%' AND USER_ID=?1")
-    List<Integer> getAllPermAddIdByUser (int userId);
+    List<Integer> getPermAddress (int userId);
+
+    @Query(nativeQuery = true, value = "DELETE FROM ADDRESS WHERE ID=?1 RETURNING *")
+    void deletePermAddressById (int addressId);
 }
