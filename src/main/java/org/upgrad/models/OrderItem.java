@@ -21,6 +21,9 @@ public class OrderItem {
     @JoinColumn(name = "order_id")
     private Order order;
 
+    public OrderItem() {
+    }
+
     public OrderItem(int id, Item item, Integer quantity, Double price) {
         this.id = id;
         this.item = item;
