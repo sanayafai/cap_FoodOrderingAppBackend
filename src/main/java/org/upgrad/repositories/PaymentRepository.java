@@ -11,6 +11,6 @@ import java.util.List;
 public interface PaymentRepository extends CrudRepository<Payment, Integer> {
 
     @Query(nativeQuery = true,  value = "SELECT * FROM payment")
-    public List<Payment> findPaymentMethod();
+     List<Payment> findPaymentMethod();
 
 }

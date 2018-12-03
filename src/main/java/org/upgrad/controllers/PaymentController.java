@@ -7,8 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.upgrad.models.Payment;
 import org.upgrad.services.PaymentService;
 import org.upgrad.services.UserAuthTokenService;
+
+import java.util.List;
 
 /**
  * @author Chandra Prakash Tekam
@@ -35,8 +38,8 @@ public class PaymentController {
         } else if (userAuthTokenService.isUserLoggedIn(accessToken).getLogoutAt() != null) {
             return new ResponseEntity<>("You have already logged out. Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
         } else {
-
-            return new ResponseEntity<>(HttpStatus.OK);
+            List<Payment> payments = paymentService.getPaymentMethods();
+            return new ResponseEntity<>(payments, HttpStatus.OK);
         }
     }
 

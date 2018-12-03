@@ -106,7 +106,8 @@ public class RestaurantController {
     @PutMapping("/{restaurantId}")
     @CrossOrigin
     public ResponseEntity<?> updateRestaurant(@PathVariable("restaurantId") int restaurantId,
-                                              @RequestParam("rating") String rating, @RequestHeader String accessToken) {
+                                              @RequestParam("rating") String rating,
+                                              @RequestHeader String accessToken) {
 
         if (userAuthTokenService.isUserLoggedIn(accessToken) == null) {
             return new ResponseEntity<>("Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
