@@ -73,6 +73,62 @@ public class AddressController {
         }
     }
 
+    /*
+     * This endpoint is to update a permanent address.
+     * Requires authentication.
+     * Updates address table.
+     */
+    @PutMapping("/address/{addressId}")
+    @CrossOrigin
+    public ResponseEntity<?> updatePermAddress (@PathVariable("addressId") int addressId, String flatBuilNo, String locality, String city, String zipcode, Integer stateId, @RequestHeader String accessToken ){
+        if(userAuthTokenService.isUserLoggedIn(accessToken) == null){
+            return new ResponseEntity<>("Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
+        }
+        else if(userAuthTokenService.isUserLoggedIn(accessToken).getLogoutAt()!=null){
+            return new ResponseEntity<>("You have already logged out. Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
+        }  else {
+            if (!isZipcodeValid(zipcode) || zipcode.length()!=6) {
+                return new ResponseEntity<>("Invalid zipcode!", HttpStatus.BAD_REQUEST);
+            } else if (!isStateIdValid(stateId)) {
+                return new ResponseEntity<>("No state by this state id!", HttpStatus.BAD_REQUEST);
+            } else if (addressService.findAddressbyId(addressId)==null) {
+                return new ResponseEntity<>("No address with this address id!", HttpStatus.BAD_REQUEST);
+            } else {
+                addressService.updatePermAddress(flatBuilNo, locality, city, zipcode, stateId, addressId);
+                return new ResponseEntity<>("Address has been updated successfully!", HttpStatus.OK);
+            }
+        }
+    }
+
+    /*
+     * This endpoint is to get all permanent address.
+     * Requires authentication.
+     * Updates address table.
+     */
+    @GetMapping("/address/user")
+    @CrossOrigin
+    public ResponseEntity<?> getAllPermAddressByUser (@RequestHeader String accessToken) {
+        if(userAuthTokenService.isUserLoggedIn(accessToken) == null){
+            return new ResponseEntity<>("Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
+        }
+        else if(userAuthTokenService.isUserLoggedIn(accessToken).getLogoutAt()!=null){
+            return new ResponseEntity<>("You have already logged out. Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
+        } else {
+            int userId = userAuthTokenService.getUserId(accessToken);
+            List<Integer> allPermAddressIdByUser = addressService.getAllPermAddIdByUser(userId);
+            if (allPermAddressIdByUser == null) {
+                return new ResponseEntity<>("No permanent address found!", HttpStatus.OK);
+            } else {
+                List<Address> allPermAddressByUser = new ArrayList<>();
+                for (Integer addressId: allPermAddressIdByUser) {
+                    allPermAddressByUser.add(addressService.findAddressbyId(addressId));
+                }
+                return new ResponseEntity<>(allPermAddressByUser, HttpStatus.OK);
+            }
+        }
+    }
+
+
     //Method to check if a zip code is a valid 6 digit number.
     public static boolean isZipcodeValid (String zipcode) {
         try {

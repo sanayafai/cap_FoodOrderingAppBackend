@@ -42,4 +42,18 @@ public class AddressServiceImpl implements AddressService{
         return addressRepository.findIdForLatestAddress();
     }
 
+    @Override
+    public Address findAddressbyId(int addressId) {
+        return addressRepository.findAddressbyId(addressId);
+    }
+
+    @Override
+    public void updatePermAddress (String flatBuilNumber, String locality, String city, String zipcode, Integer stateId, Integer addressId) {
+        addressRepository.updatePermAddress(flatBuilNumber, locality, city, zipcode, stateId, addressId);
+    }
+
+    @Override
+    public List<Integer> getAllPermAddIdByUser (int userId) {
+        return addressRepository.getAllPermAddIdByUser(userId);
+    }
 }

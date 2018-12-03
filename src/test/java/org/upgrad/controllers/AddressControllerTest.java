@@ -1,47 +1,47 @@
-//package org.upgrad.controllers;
-//
-//import org.hamcrest.Matchers;
-//import org.junit.Test;
-//import org.junit.runner.RunWith;
-//import org.mockito.Mockito;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-//import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-//import org.springframework.boot.test.context.SpringBootTest;
-//import org.springframework.boot.test.mock.mockito.MockBean;
-//import org.springframework.http.MediaType;
-//import org.springframework.test.context.junit4.SpringRunner;
-//import org.springframework.test.web.servlet.MockMvc;
-//import org.upgrad.models.Address;
-//import org.upgrad.models.States;
-//import org.upgrad.models.UserAuthToken;
-//import org.upgrad.services.AddressService;
-//import org.upgrad.services.UserAuthTokenService;
-//
-//import java.util.List;
-//
-//import static java.util.Collections.singletonList;
-//import static org.assertj.core.util.DateUtil.now;
-//import static org.hamcrest.Matchers.containsString;
-//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-//import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON;
-//
-//// This class contains all the test cases regarding the address controller
-//@RunWith(SpringRunner.class)
-//@WebMvcTest(AddressController.class)
-//public class AddressControllerTest {
-//
-//    @Autowired
-//    private MockMvc mvc;
-//
-//    @MockBean
-//    private AddressService addressService;
-//
-//    @MockBean
-//    private UserAuthTokenService userAuthTokenService;
+package org.upgrad.controllers;
+
+import org.hamcrest.Matchers;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.upgrad.models.Address;
+import org.upgrad.models.States;
+import org.upgrad.models.UserAuthToken;
+import org.upgrad.services.AddressService;
+import org.upgrad.services.UserAuthTokenService;
+
+import java.util.List;
+
+import static java.util.Collections.singletonList;
+import static org.assertj.core.util.DateUtil.now;
+import static org.hamcrest.Matchers.containsString;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON;
+
+// This class contains all the test cases regarding the address controller
+@RunWith(SpringRunner.class)
+@WebMvcTest(AddressController.class)
+public class AddressControllerTest {
+
+    @Autowired
+    private MockMvc mvc;
+
+    @MockBean
+    private AddressService addressService;
+
+    @MockBean
+    private UserAuthTokenService userAuthTokenService;
 //
 //    @Test
 //    public void saveAddressWithoutLogin() throws Exception{
@@ -189,29 +189,29 @@
 //                .andExpect(content().string(containsString("You have already logged out. Please Login first to access this endpoint!")));
 //    }
 //
-//    @Test
-//    public void updateAddressWithInvalidZipcode() throws Exception{
-//        String flatBuilNo = "123/32 Nishuvi Building";
-//        String locality = "Worli";
-//        String city = "Mumbai";
-//        String zipcode = "12001r";
-//        String type = "temp";
-//        String stateId = "20";
-//        String accessToken = "#############################";
-//        UserAuthToken userAuthToken = new UserAuthToken();
-//        Mockito.when(userAuthTokenService.isUserLoggedIn(accessToken)).thenReturn(userAuthToken);
-//        String url = "/address/1";
-//        mvc.perform(put(url)
-//                .param("flatBuilNo", flatBuilNo)
-//                .param("locality", locality)
-//                .param("city", city)
-//                .param("zipcode", zipcode)
-//                .param("type", type)
-//                .param("stateId", stateId)
-//                .header("accessToken", accessToken))
-//                .andExpect(status().is4xxClientError())
-//                .andExpect(content().string(containsString("Invalid zipcode!")));
-//    }
+    @Test
+    public void updateAddressWithInvalidZipcode() throws Exception{
+        String flatBuilNo = "123/32 Nishuvi Building";
+        String locality = "Worli";
+        String city = "Mumbai";
+        String zipcode = "12001r";
+        String type = "temp";
+        String stateId = "20";
+        String accessToken = "#############################";
+        UserAuthToken userAuthToken = new UserAuthToken();
+        Mockito.when(userAuthTokenService.isUserLoggedIn(accessToken)).thenReturn(userAuthToken);
+        String url = "/address/1";
+        mvc.perform(put(url)
+                .param("flatBuilNo", flatBuilNo)
+                .param("locality", locality)
+                .param("city", city)
+                .param("zipcode", zipcode)
+                .param("type", type)
+                .param("stateId", stateId)
+                .header("accessToken", accessToken))
+                .andExpect(status().is4xxClientError())
+                .andExpect(content().string(containsString("Invalid zipcode!")));
+    }
 //
 //    @Test
 //    public void updateAddressWithInvalifAddressId() throws Exception{
@@ -374,20 +374,20 @@
 //                .andExpect(content().string(containsString("Address has been deleted successfully!")));
 //    }
 //
-//    @Test
-//    public void getAllStates() throws Exception{
-//        States states = new States();
-//        states.setId(1);
-//        states.setStateName("Maharashtra");
-//        List<States> statesList = singletonList(states);
-//        Mockito.when(addressService.getAllStates()).thenReturn(statesList);
-//        String url = "/states";
-//        mvc.perform(get(url)
-//                .contentType(MediaType.asMediaType(APPLICATION_JSON)))
-//                .andExpect(status().is2xxSuccessful())
-//                .andExpect(jsonPath("$[0].stateName", Matchers.is("Maharashtra")));
-//    }
+    @Test
+    public void getAllStates() throws Exception{
+        States states = new States();
+        states.setId(1);
+        states.setStateName("Maharashtra");
+        List<States> statesList = singletonList(states);
+        Mockito.when(addressService.getAllStates()).thenReturn(statesList);
+        String url = "/states";
+        mvc.perform(get(url)
+                .contentType(MediaType.asMediaType(APPLICATION_JSON)))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$[0].stateName", Matchers.is("Maharashtra")));
+    }
+
 //
-//
-//
-//}
+
+}
