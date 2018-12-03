@@ -56,10 +56,8 @@ public class AddressController {
             // Checking if zip code is valid.
             if (!isZipcodeValid(zipcode) || zipcode.length()!=6) {
                 return new ResponseEntity<>("Invalid zipcode!", HttpStatus.BAD_REQUEST);
-            // Checking if state id exists.
-            } else if (!isStateIdValid(stateId)) {
-                return new ResponseEntity<>("No state by this state id!", HttpStatus.BAD_REQUEST);
-            } else {
+            }
+            else {
                 //Adding new address to the address table.
                 addressService.addAddress(flatBuilNo, locality, city, zipcode, stateId);
                 //Finding the Id for the latest entry in address table.
@@ -89,9 +87,7 @@ public class AddressController {
         }  else {
             if (!isZipcodeValid(zipcode) || zipcode.length()!=6) {
                 return new ResponseEntity<>("Invalid zipcode!", HttpStatus.BAD_REQUEST);
-            } else if (!isStateIdValid(stateId)) {
-                return new ResponseEntity<>("No state by this state id!", HttpStatus.BAD_REQUEST);
-            } else if (addressService.getAddress(addressId)==null) {
+            } else if (!addressService.getAddress(addressId)) {
                 return new ResponseEntity<>("No address with this address id!", HttpStatus.BAD_REQUEST);
             } else {
                 addressService.updatePermAddress(flatBuilNo, locality, city, zipcode, stateId, addressId);
@@ -114,15 +110,11 @@ public class AddressController {
             return new ResponseEntity<>("You have already logged out. Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
         } else {
             int userId = userAuthTokenService.getUserId(accessToken);
-            List<Integer> allPermAddressIdByUser = addressService.getPermAddress(userId);
+            List<Address> allPermAddressIdByUser = addressService.getPermAddress(userId);
             if (allPermAddressIdByUser == null) {
-                return new ResponseEntity<>("No permanent address found!", HttpStatus.OK);
+                return new ResponseEntity<>("No permanent address found!", HttpStatus.BAD_REQUEST);
             } else {
-                List<Address> allPermAddressByUser = new ArrayList<>();
-                for (Integer addressId: allPermAddressIdByUser) {
-                    allPermAddressByUser.add(addressService.getAddress(addressId));
-                }
-                return new ResponseEntity<>(allPermAddressByUser, HttpStatus.OK);
+                return new ResponseEntity<>(allPermAddressIdByUser, HttpStatus.OK);
             }
         }
     }
@@ -132,7 +124,7 @@ public class AddressController {
      * Requires authentication.
      * Takes in the address id as path variables and deletes it from the address table.
      */
-    @DeleteMapping ("/api/address/{addressId}")
+    @DeleteMapping ("/address/{addressId}")
     @CrossOrigin
     public ResponseEntity<?> deletePermAddress (@PathVariable("addressId") int addressId, @RequestHeader String accessToken) {
         if(userAuthTokenService.isUserLoggedIn(accessToken) == null){
@@ -141,7 +133,7 @@ public class AddressController {
         else if(userAuthTokenService.isUserLoggedIn(accessToken).getLogoutAt()!=null){
             return new ResponseEntity<>("You have already logged out. Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
         } else {
-            if (addressService.getAddress(addressId) == null) {
+            if (!addressService.getAddress(addressId)) {
                 return new ResponseEntity<>("No address with this address id!", HttpStatus.BAD_REQUEST);
             } else {
                 addressService.deletePermAddressById(addressId);
@@ -160,16 +152,5 @@ public class AddressController {
             return false;
         }
         return true;
-    }
-
-    //Method to check if a state id getting passed is available in DB.
-    public Boolean isStateIdValid (Integer stateId) {
-        List <States> states = addressService.getAllStates();
-        for (States state: states) {
-            if (state.getId()==stateId) {
-                return true;
-            }
-        }
-        return false;
     }
 }

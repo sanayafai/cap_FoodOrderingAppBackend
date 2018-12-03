@@ -16,11 +16,11 @@ public interface AddressService {
     //This method will fetch the id for the latest entry in the address table;
     int findIdForLatestAddress();
 
-    Address getAddress(int addressId);
+    Boolean getAddress(int addressId);
 
     void updatePermAddress (String flatBuilNumber, String locality, String city, String zipcode, Integer stateId, Integer addressId);
 
-    List<Integer> getPermAddress (int userId);
+    List<Address> getPermAddress (int userId);
 
     Boolean deletePermAddressById (int addressId);
 

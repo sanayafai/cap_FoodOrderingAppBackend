@@ -27,15 +27,15 @@ public interface AddressRepository extends CrudRepository<Address, Integer> {
     void userAddressMapping (String type, Integer userId, Integer addressId);
 
     @Query(nativeQuery = true, value = "SELECT * FROM ADDRESS WHERE ID=?1" )
-    Address getAddress(int addressId);
+    Integer getAddress(int addressId);
 
     @Transactional
     @Modifying
     @Query(nativeQuery = true,value = "UPDATE ADDRESS SET flat_buil_number=?1, locality=?2, city=?3, zipcode=?4, state_id=?5 WHERE id=?6")
     void updatePermAddress (String flatBuilNumber, String locality, String city, String zipcode, Integer stateId, Integer addressId);
 
-    @Query (nativeQuery = true, value = "SELECT ADDRESS_ID FROM USER_ADDRESS WHERE TYPE LIKE '%perm%' AND USER_ID=?1")
-    List<Integer> getPermAddress (int userId);
+    @Query (nativeQuery = true, value = "SELECT * FROM ADDRESS A INNER JOIN USER_ADDRESS U ON U.ADDRESS_ID = A.ID WHERE TYPE LIKE '%perm%' AND USER_ID=?1")
+    List<Address> getPermAddress (int userId);
 
     @Query(nativeQuery = true, value = "DELETE FROM ADDRESS WHERE ID=?1 RETURNING *")
     void deletePermAddressById (int addressId);
