@@ -145,7 +145,7 @@ public class UserController {
             // Looking for userId ONLY IF user is logged in.
             int userId = userAuthTokenService.getUserId(accessToken);
             // Checking IF old password matches the password in DB.
-            if (!oldPwdSha.equals(userService.findUserPwdById(userId))) {
+            if (!userService.getUserById(userId).getPassword().equalsIgnoreCase(oldPwdSha)) {
                 return new ResponseEntity<>("Your password did not match to your old password!", HttpStatus.BAD_REQUEST);
             } else if (!isPasswordStrong(newPassword)) { // Checking IF the new password is strong ONLY IF old password matches the password in DB.
                 return new ResponseEntity<>("Weak password!", HttpStatus.BAD_REQUEST);
