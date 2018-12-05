@@ -100,7 +100,7 @@ public class UserController {
             return new ResponseEntity<>("Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
         }
         else if(userAuthTokenService.isUserLoggedIn(accessToken).getLogoutAt()!=null){
-            return new ResponseEntity<>("You have already logged out. Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Invalid Coupon!", HttpStatus.UNAUTHORIZED);
         }  else{
             userAuthTokenService.removeAccessToken(accessToken);
             return new ResponseEntity<>("You have logged out successfully!",HttpStatus.OK);}
