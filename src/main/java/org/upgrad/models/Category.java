@@ -1,4 +1,5 @@
 package org.upgrad.models;
+
 import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -15,6 +16,14 @@ public class Category {
     @Transient
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Item item;
+  
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getCategoryName() {
         return categoryName;
@@ -22,14 +31,6 @@ public class Category {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public Item getItem() {
