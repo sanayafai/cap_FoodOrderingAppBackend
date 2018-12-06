@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import org.upgrad.models.Category;
+import org.upgrad.services.CategoryService;
 
 @RestController
 public class CategoryController {
