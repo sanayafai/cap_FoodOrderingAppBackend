@@ -1,7 +1,6 @@
 package org.upgrad.services;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.upgrad.models.Item;
 import org.upgrad.repositories.ItemRepository;
 
+@Service
+@Transactional
 public class ItemServiceImpl implements ItemService{
   
     @Autowired
@@ -29,6 +30,6 @@ public class ItemServiceImpl implements ItemService{
             itemList.add(item);
         }
         return itemList;
+      
     }
-  
 }
