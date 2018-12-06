@@ -8,7 +8,7 @@ import org.upgrad.repositories.CategoryRepository;
 
 @Service
 @Transactional
-public class CategoryServiceImpl{
+public class CategoryServiceImpl implements CategoryService {
   
     private final CategoryRepository categoryRepository;
 
@@ -27,7 +27,7 @@ public class CategoryServiceImpl{
         String s1 = categoryName.substring(0, 1).toUpperCase();
         String nameCapitalized = s1 + categoryName.substring(1).toLowerCase();
         return categoryRepository.getCategoryByName(nameCapitalized);
-}
+    }
 
     @Override
     public Integer getCategoryCount(String categoryName){
@@ -36,5 +36,4 @@ public class CategoryServiceImpl{
         String nameCapitalized = s1 + categoryName.substring(1).toLowerCase();
         return categoryRepository.getCategoryCountByName(nameCapitalized);
     }
-  
 }
