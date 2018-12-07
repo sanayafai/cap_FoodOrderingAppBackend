@@ -16,16 +16,18 @@ import java.util.List;
  */
 
 @Entity
-@Table(name="item")
+@Table(name = "item")
 public class Item {
-  
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    @Column(name="item_name")
+
     private String itemName;
+
     private int price;
+
     private String type;
-  
+
     @JsonIgnore
     @ManyToMany(mappedBy = "items")
     private List<Category> categories;
@@ -68,6 +70,11 @@ public class Item {
         return type;
     }
 
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public List<Category> getCategories() {
         return categories;
     }
@@ -75,8 +82,5 @@ public class Item {
     public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
-    
-    public void setType(String type) {
-        this.type = type;
-    }
+
 }

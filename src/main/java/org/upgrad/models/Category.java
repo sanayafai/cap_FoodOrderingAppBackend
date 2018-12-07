@@ -16,22 +16,6 @@ import java.util.Set;
 @Entity
 @Table(name="category")
 public class Category {
-  
-    @Transient
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Item item;
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Item getItem() {
-        return item;
-    }
-
-    public void setItem(Item item) {
-        this.item = item;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,6 +23,7 @@ public class Category {
 
     private String categoryName;
 
+    @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "category_item",
             joinColumns = @JoinColumn(name = "category_id"),

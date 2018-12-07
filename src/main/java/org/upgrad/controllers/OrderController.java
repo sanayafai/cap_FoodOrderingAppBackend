@@ -10,6 +10,7 @@ import org.upgrad.requestResponseEntity.ItemQuantity;
 import org.upgrad.services.OrderService;
 import org.upgrad.services.UserAuthTokenService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,15 +66,15 @@ public class OrderController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> addOrder(@RequestParam(value = "addressId", required = false) Integer  addressId,
+    public ResponseEntity<?> addOrder(@RequestParam(value = "addressId", required = false) Integer addressId,
                                       @RequestParam(value = "flatBuilNo", required = false) String flatBuilNo,
                                       @RequestParam(value = "locality", required = false) String locality,
                                       @RequestParam(value = "city", required = false) String city,
                                       @RequestParam(value = "zipcode", required = false) String zipcode,
-                                      @RequestParam(value = "stateId", required = false)  Integer stateId,
+                                      @RequestParam(value = "stateId", required = false) Integer stateId,
                                       @RequestParam(value = "type", required = false) String type,
                                       @RequestParam("paymentId") Integer paymentId,
-                                      @RequestBody  List<ItemQuantity> itemQuantities,
+                                      @RequestBody ArrayList<ItemQuantity> itemQuantities,
                                       @RequestParam("bill") Double bill,
                                       @RequestParam(value = "couponId", required = false) Integer couponId,
                                       @RequestParam(value = "discount", defaultValue = "0.0") Double discount,
@@ -83,14 +84,19 @@ public class OrderController {
         } else if (userAuthTokenService.isUserLoggedIn(accessToken).getLogoutAt() != null) {
             return new ResponseEntity<>("You have already logged out. Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
         } else {
-            Integer userId =  userAuthTokenService.getUserId(accessToken);
-            if (zipcode == null || !zipcode.matches("^[1-9][0-9]{5}$")){
-                return new ResponseEntity<>("Invalid zipcode!", HttpStatus.BAD_REQUEST);
-            }else {
-           Integer count =  orderService.addOrder(flatBuilNo, locality,city,zipcode, stateId,type,
-                    paymentId, userId, itemQuantities,  bill, couponId, discount);
-                return new ResponseEntity<>(count, HttpStatus.OK);
+            Integer userId = userAuthTokenService.getUserId(accessToken);
+            Integer orderId;
+            if (null != addressId) {
+                orderId = orderService.addOrderWithPermAddress(addressId, paymentId, userId, itemQuantities, bill, couponId, discount);
+            } else {
+                if (zipcode == null || !zipcode.matches("^[1-9][0-9]{5}$")) {
+                    return new ResponseEntity<>("Invalid zipcode!", HttpStatus.BAD_REQUEST);
+                }
+                orderId = orderService.addOrder(flatBuilNo, locality, city, zipcode, stateId, type,
+                        paymentId, userId, itemQuantities, bill, couponId, discount);
+
             }
+            return new ResponseEntity<>(orderId, HttpStatus.OK);
         }
     }
 }
