@@ -32,7 +32,7 @@ public class ItemController {
             return new ResponseEntity<>(item, HttpStatus.OK);
         }
         else {
-            return new ResponseEntity<>("No Restaurant for this id!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("No Restaurant by this id!", HttpStatus.BAD_REQUEST);
         }
     }
 

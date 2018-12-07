@@ -9,8 +9,8 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @OneToOne()
-    @JoinColumn(name = "id", referencedColumnName = "item_id")
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "item_id")
     private Item item;
 
     private Integer quantity;
