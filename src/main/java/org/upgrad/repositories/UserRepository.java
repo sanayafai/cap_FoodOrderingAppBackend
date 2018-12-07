@@ -32,9 +32,9 @@ public interface UserRepository extends CrudRepository<User, Integer> {
     void newUser (String firstName, String lastName, String email, String contactNumber, String password);
 
     @Transactional
-    @Modifying
+    @Modifying (clearAutomatically = true, flushAutomatically = true)
     @Query (nativeQuery = true,value = "UPDATE USERS SET firstname=?1, lastname=?2 WHERE id=?3")
-    User updateUser (String firstName, String lastName, int id);
+    int updateUser (String firstName, String lastName, int id);
 
     @Query(nativeQuery = true,value="SELECT PASSWORD FROM USERS WHERE id=?1")
     String findUserPwdById(int id);
