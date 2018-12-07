@@ -119,7 +119,8 @@ public class UserController {
             return new ResponseEntity<>("You have already logged out. Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
         }  else {
             int userId = userAuthTokenService.getUserId(accessToken);
-            return new ResponseEntity<>(userService.updateUser(firstName, lastName, userId), HttpStatus.OK);
+            User user = userService.updateUser(firstName, lastName, userId);
+            return new ResponseEntity<>(user, HttpStatus.OK);
         }
     }
 
