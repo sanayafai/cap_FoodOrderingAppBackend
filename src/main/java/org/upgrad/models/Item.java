@@ -16,10 +16,8 @@ import java.util.List;
  */
 
 @Entity
-@Table(name="item")
+@Table(name = "item")
 public class Item {
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -72,7 +70,10 @@ public class Item {
         return type;
     }
 
-    public void setType(String type) {  this.type = type; }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public List<Category> getCategories() {
         return categories;

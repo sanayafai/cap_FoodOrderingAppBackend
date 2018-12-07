@@ -47,7 +47,7 @@ public class OrderControllerTest {
     private UserAuthTokenService userAuthTokenService;
 
     @Test
-    public void getCouponWithoutLogin() throws Exception{
+    public void getCouponWithoutLogin() throws Exception {
         String accessToken = "#############################";
         Mockito.when(userAuthTokenService.isUserLoggedIn(accessToken)).thenReturn(null);
         String url = "/order/coupon/FLAT50";
@@ -58,7 +58,7 @@ public class OrderControllerTest {
     }
 
     @Test
-    public void getCouponWithLoggedOutUser() throws Exception{
+    public void getCouponWithLoggedOutUser() throws Exception {
         String accessToken = "#############################";
         UserAuthToken userAuthToken = new UserAuthToken();
         userAuthToken.setLogoutAt(now());
@@ -72,7 +72,7 @@ public class OrderControllerTest {
 
 
     @Test
-    public void getCouponWithInvalidCouponName() throws Exception{
+    public void getCouponWithInvalidCouponName() throws Exception {
         String accessToken = "#############################";
         UserAuthToken userAuthToken = new UserAuthToken();
         Mockito.when(userAuthTokenService.isUserLoggedIn(accessToken)).thenReturn(userAuthToken);
@@ -85,7 +85,7 @@ public class OrderControllerTest {
     }
 
     @Test
-    public void getCoupon() throws Exception{
+    public void getCoupon() throws Exception {
         String accessToken = "#############################";
         UserAuthToken userAuthToken = new UserAuthToken();
         Coupon coupon = new Coupon();
@@ -102,7 +102,7 @@ public class OrderControllerTest {
     }
 
     @Test
-    public void getOrdersWithoutLogin() throws Exception{
+    public void getOrdersWithoutLogin() throws Exception {
         String accessToken = "#############################";
         Mockito.when(userAuthTokenService.isUserLoggedIn(accessToken)).thenReturn(null);
         String url = "/order";
@@ -113,7 +113,7 @@ public class OrderControllerTest {
     }
 
     @Test
-    public void getOrdersWithLoggedOutUser() throws Exception{
+    public void getOrdersWithLoggedOutUser() throws Exception {
         String accessToken = "#############################";
         UserAuthToken userAuthToken = new UserAuthToken();
         userAuthToken.setLogoutAt(now());
@@ -127,7 +127,7 @@ public class OrderControllerTest {
 
 
     @Test
-    public void getOrdersWithNoPastOrders() throws Exception{
+    public void getOrdersWithNoPastOrders() throws Exception {
         String accessToken = "#############################";
         UserAuthToken userAuthToken = new UserAuthToken();
         Integer userId = 1;
@@ -142,7 +142,7 @@ public class OrderControllerTest {
     }
 
     @Test
-    public void getOrdersByUser() throws Exception{
+    public void getOrdersByUser() throws Exception {
         String accessToken = "#############################";
         UserAuthToken userAuthToken = new UserAuthToken();
         Order order = new Order();
@@ -161,7 +161,7 @@ public class OrderControllerTest {
 
 
     @Test
-    public void saveOrdersWithoutLogin() throws Exception{
+    public void saveOrdersWithoutLogin() throws Exception {
         String addressId = "1";
         String paymentId = "2";
         String bill = "1200.0";
@@ -171,17 +171,17 @@ public class OrderControllerTest {
         String url = "/order";
         mvc.perform(post(url)
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("addressId",addressId)
-                .param("paymentId",paymentId)
-                .content(createUserInJson(1,2))
-                .param("bill",bill)
-                .param("discount",discount)
+                .param("addressId", addressId)
+                .param("paymentId", paymentId)
+                .content(createUserInJson(1, 2))
+                .param("bill", bill)
+                .param("discount", discount)
                 .header("accessToken", accessToken))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString("Please Login first to access this endpoint!")));
     }
 
-    private static String createUserInJson (Integer itemId, Integer quantity) {
+    private static String createUserInJson(Integer itemId, Integer quantity) {
         return "[\n" +
                 "  {\n" +
                 "    \"itemId\":\"" + itemId + "\",\n" +
@@ -191,7 +191,7 @@ public class OrderControllerTest {
     }
 
     @Test
-    public void saveOrdersWithLoggedOutUser() throws Exception{
+    public void saveOrdersWithLoggedOutUser() throws Exception {
         String addressId = "1";
         String paymentId = "2";
         String bill = "1200.0";
@@ -203,11 +203,11 @@ public class OrderControllerTest {
         String url = "/order";
         mvc.perform(post(url)
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("addressId",addressId)
-                .param("paymentId",paymentId)
-                .content(createUserInJson(1,2))
-                .param("bill",bill)
-                .param("discount",discount)
+                .param("addressId", addressId)
+                .param("paymentId", paymentId)
+                .content(createUserInJson(1, 2))
+                .param("bill", bill)
+                .param("discount", discount)
                 .header("accessToken", accessToken))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString("You have already logged out. Please Login first to access this endpoint!")));
@@ -215,7 +215,7 @@ public class OrderControllerTest {
 
 
     @Test
-    public void saveOrderWithInvalidZipcode() throws Exception{
+    public void saveOrderWithInvalidZipcode() throws Exception {
         String addressId = null;
         String flatBuilNo = "123/32 Nishuvi Building";
         String locality = "Worli";
@@ -234,24 +234,24 @@ public class OrderControllerTest {
         String url = "/order";
         mvc.perform(post(url)
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("addressId",addressId)
+                .param("addressId", addressId)
                 .param("flatBuilNo", flatBuilNo)
                 .param("locality", locality)
                 .param("city", city)
                 .param("zipcode", zipcode)
                 .param("type", type)
                 .param("stateId", stateId)
-                .param("paymentId",paymentId)
-                .content(createUserInJson(1,2))
-                .param("bill",bill)
-                .param("discount",discount)
+                .param("paymentId", paymentId)
+                .content(createUserInJson(1, 2))
+                .param("bill", bill)
+                .param("discount", discount)
                 .header("accessToken", accessToken))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString("Invalid zipcode!")));
     }
 
     @Test
-    public void saveOrderWithValidZipcode() throws Exception{
+    public void saveOrderWithValidZipcode() throws Exception {
         String addressId = null;
         String flatBuilNo = "123/32 Nishuvi Building";
         String locality = "Worli";
@@ -266,15 +266,15 @@ public class OrderControllerTest {
         String accessToken = "#############################";
         UserAuthToken userAuthToken = new UserAuthToken();
         Integer userId = 1;
-        ItemQuantity itemQuantity = new ItemQuantity(1,1);
-        ItemQuantity itemQuantity1 = new ItemQuantity(2,2);
+        ItemQuantity itemQuantity = new ItemQuantity(1, 1);
+        ItemQuantity itemQuantity1 = new ItemQuantity(2, 2);
         ArrayList<ItemQuantity> itemQuantities = new ArrayList<>();
         itemQuantities.add(itemQuantity);
         itemQuantities.add(itemQuantity1);
         Mockito.when(userAuthTokenService.isUserLoggedIn(accessToken)).thenReturn(userAuthToken);
         Mockito.when(userAuthTokenService.getUserId(accessToken)).thenReturn(userId);
         Mockito.when(orderService.addOrder(flatBuilNo, locality, city, zipcode, 2, type, 2, userId,
-                itemQuantities, 1200.0,couponId,600.0)).thenReturn(7);
+                itemQuantities, 1200.0, couponId, 600.0)).thenReturn(7);
         String url = "/order";
         mvc.perform(post(url)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -285,17 +285,17 @@ public class OrderControllerTest {
                 .param("zipcode", zipcode)
                 .param("type", type)
                 .param("stateId", stateId)
-                .param("paymentId",paymentId)
-                .content(createUserInJson(1,2))
-                .param("bill",bill)
-                .param("discount",discount)
+                .param("paymentId", paymentId)
+                .content(createUserInJson(1, 2))
+                .param("bill", bill)
+                .param("discount", discount)
                 .header("accessToken", accessToken))
                 .andExpect(status().is2xxSuccessful());
 
     }
 
     @Test
-    public void saveOrder() throws Exception{
+    public void saveOrder() throws Exception {
         String addressId = "1";
         String paymentId = "2";
         String bill = "1200.0";
@@ -304,8 +304,8 @@ public class OrderControllerTest {
         String discount = "600.0";
         String accessToken = "#############################";
         UserAuthToken userAuthToken = new UserAuthToken();
-        ItemQuantity itemQuantity = new ItemQuantity(1,1);
-        ItemQuantity itemQuantity1 = new ItemQuantity(2,2);
+        ItemQuantity itemQuantity = new ItemQuantity(1, 1);
+        ItemQuantity itemQuantity1 = new ItemQuantity(2, 2);
         ArrayList<ItemQuantity> itemQuantities = new ArrayList<>();
         itemQuantities.add(itemQuantity);
         itemQuantities.add(itemQuantity1);
@@ -314,21 +314,20 @@ public class OrderControllerTest {
         Integer orderId = 9;
         Mockito.when(userAuthTokenService.isUserLoggedIn(accessToken)).thenReturn(userAuthToken);
         Mockito.when(userAuthTokenService.getUserId(accessToken)).thenReturn(userId);
-        Mockito.when(orderService.addOrderWithPermAddress(1,2,userId,itemQuantities,1200.0,
-                couponId,600.0)).thenReturn(orderId);
+        Mockito.when(orderService.addOrderWithPermAddress(1, 2, userId, itemQuantities, 1200.0,
+                couponId, 600.0)).thenReturn(orderId);
         String url = "/order";
         mvc.perform(post(url)
                 .contentType(MediaType.APPLICATION_JSON)
-                .param("addressId",addressId)
-                .param("paymentId",paymentId)
-                .content(createUserInJson(1,2))
-                .param("bill",bill)
-                .param("discount",discount)
+                .param("addressId", addressId)
+                .param("paymentId", paymentId)
+                .content(createUserInJson(1, 2))
+                .param("bill", bill)
+                .param("discount", discount)
                 .header("accessToken", accessToken))
                 .andExpect(status().is2xxSuccessful());
 
     }
-
 
 
 }

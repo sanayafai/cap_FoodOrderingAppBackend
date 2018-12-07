@@ -23,6 +23,7 @@ public class Category {
 
     private String categoryName;
 
+    @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "category_item",
             joinColumns = @JoinColumn(name = "category_id"),
