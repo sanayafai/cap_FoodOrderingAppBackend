@@ -299,6 +299,8 @@ public class OrderControllerTest {
         String addressId = "1";
         String paymentId = "2";
         String bill = "1200.0";
+
+
         String discount = "600.0";
         String accessToken = "#############################";
         UserAuthToken userAuthToken = new UserAuthToken();
