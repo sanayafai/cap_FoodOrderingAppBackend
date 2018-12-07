@@ -85,18 +85,18 @@ public class OrderController {
             return new ResponseEntity<>("You have already logged out. Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
         } else {
             Integer userId = userAuthTokenService.getUserId(accessToken);
-            Integer count = -1;
+            Integer orderId;
             if (null != addressId) {
-                count = orderService.addOrderWithPermAddress(addressId, paymentId, userId, itemQuantities, bill, couponId, discount);
+                orderId = orderService.addOrderWithPermAddress(addressId, paymentId, userId, itemQuantities, bill, couponId, discount);
             } else {
                 if (zipcode == null || !zipcode.matches("^[1-9][0-9]{5}$")) {
                     return new ResponseEntity<>("Invalid zipcode!", HttpStatus.BAD_REQUEST);
                 }
-                count = orderService.addOrder(flatBuilNo, locality, city, zipcode, stateId, type,
+                orderId = orderService.addOrder(flatBuilNo, locality, city, zipcode, stateId, type,
                         paymentId, userId, itemQuantities, bill, couponId, discount);
 
             }
-            return new ResponseEntity<>(count, HttpStatus.OK);
+            return new ResponseEntity<>(orderId, HttpStatus.OK);
         }
     }
 }

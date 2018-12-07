@@ -25,7 +25,7 @@ public interface OrderRepository extends CrudRepository<Order, Integer> {
     @Query(nativeQuery = true, value = "INSERT into orders (bill, coupon_id, discount," +
             " \"date\", payment_id, user_id, address_id)\n" +
             "VALUES(?1, ?2, ?3, now(), ?4, ?5, ?6)")
-    Integer saveOrder(double bill, Integer couponId, double discount, Integer paymentId, Integer userId, Integer addressId);
+    Integer saveOrder(double bill, int couponId, double discount, Integer paymentId, Integer userId, Integer addressId);
 
 
     @Transactional
