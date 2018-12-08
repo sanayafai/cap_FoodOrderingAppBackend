@@ -52,7 +52,7 @@ public class AddressController {
                 type = "perm";
             }
             // Checking if zip code is valid.
-            if (!isZipcodeValid(zipcode) || zipcode.length() != 6) {
+            if (!isZipcodeValid(zipcode)) {
                 return new ResponseEntity<>("Invalid zipcode!", HttpStatus.BAD_REQUEST);
             } else {
                 //Adding new address to the address table.
@@ -80,19 +80,18 @@ public class AddressController {
             return new ResponseEntity<>("Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
         } else if (userAuthTokenService.isUserLoggedIn(accessToken).getLogoutAt() != null) {
             return new ResponseEntity<>("You have already logged out. Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
-        } else {
-            if (zipcode != null) {
-                if (!isZipcodeValid(zipcode) || zipcode.length() != 6) {
-                    return new ResponseEntity<>("Invalid zipcode!", HttpStatus.BAD_REQUEST);
-                }
-            }
-            if (!addressService.getAddress(addressId)) {
+        } else { //entering further checkes ONLY if the user is logged in.
+            if (zipcode != null && !isZipcodeValid(zipcode)) { //checking zipcode validity IF there is a zipcode.
+                return new ResponseEntity<>("Invalid zipcode!", HttpStatus.BAD_REQUEST);
+            } else if (!addressService.getAddress(addressId)) { //Checking address ID validity
                 return new ResponseEntity<>("No address with this address id!", HttpStatus.BAD_REQUEST);
-            } else {
+            } else if (stateId == null) { //A separate service IF stateId is blank.  As other the int state ID being blank will throw bytea error.
+                addressService.updatePermAddressWithoutState(flatBuilNo, locality, city, zipcode, addressId);
+            } else { //A separate service IF stateId is being udpated with the address change.
                 addressService.updatePermAddress(flatBuilNo, locality, city, zipcode, stateId, addressId);
-                return new ResponseEntity<>("Address has been updated successfully!", HttpStatus.OK);
             }
         }
+        return new ResponseEntity<>("Address has been updated successfully!", HttpStatus.OK);
     }
 
     /*
@@ -142,11 +141,10 @@ public class AddressController {
 
     //Method to check if a zip code is a valid 6 digit number.
     public static boolean isZipcodeValid(String zipcode) {
-        try {
-            Integer.parseInt(zipcode);
-        } catch (NumberFormatException ex) {
+        if (zipcode.matches("\\d{6}")) {
+            return true;
+        } else {
             return false;
         }
-        return true;
     }
 }

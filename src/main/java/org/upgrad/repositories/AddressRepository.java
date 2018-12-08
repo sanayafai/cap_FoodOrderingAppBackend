@@ -37,8 +37,13 @@ public interface AddressRepository extends CrudRepository<Address, Integer> {
     @Query(nativeQuery = true, value = "UPDATE ADDRESS SET flat_buil_number=?1, locality=?2, city=?3, zipcode=?4 WHERE id=?5")
     void updatePermAddress(String flatBuilNumber, String locality, String city, String zipcode, Integer addressId);
 
-    @Query(nativeQuery = true, value = "SELECT * FROM ADDRESS A INNER JOIN USER_ADDRESS U ON U.ADDRESS_ID = A.ID WHERE TYPE LIKE '%perm%' AND USER_ID=?1")
-    List<Address> getPermAddress(int userId);
+    @Transactional
+    @Modifying
+    @Query(nativeQuery = true,value = "UPDATE ADDRESS SET flat_buil_number=?1, locality=?2, city=?3, zipcode=?4 WHERE id=?5")
+    void updatePermAddressWithoutState (String flatBuilNumber, String locality, String city, String zipcode, Integer addressId);
+
+    @Query (nativeQuery = true, value = "SELECT * FROM ADDRESS A INNER JOIN USER_ADDRESS U ON U.ADDRESS_ID = A.ID WHERE TYPE LIKE '%perm%' AND USER_ID=?1")
+    List<Address> getPermAddress (int userId);
 
     @Query(nativeQuery = true, value = "DELETE FROM ADDRESS WHERE ID=?1 RETURNING *")
     void deletePermAddressById(int addressId);

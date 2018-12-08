@@ -25,6 +25,8 @@ public interface AddressService {
 
     List<Address> getPermAddress (int userId);
 
+    void updatePermAddressWithoutState(String flatBuilNumber, String locality, String city, String zipcode, Integer addressId);
+
     Boolean deletePermAddressById (int addressId);
 
 }
