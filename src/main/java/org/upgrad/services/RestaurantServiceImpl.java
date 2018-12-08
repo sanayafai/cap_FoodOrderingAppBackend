@@ -85,6 +85,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
 
     private void getRestaurantResponseList(List<Restaurant> restaurants) {
+
         restaurantResponseList = new ArrayList<>();
         restaurants.forEach(restaurant -> {
             StringBuilder categories = new StringBuilder();
