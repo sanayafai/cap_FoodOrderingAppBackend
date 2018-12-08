@@ -52,7 +52,7 @@ public class RestaurantController {
     @CrossOrigin
     public ResponseEntity<?> getRestaurantsByName(@PathVariable("reastaurantName") String reastaurantName) {
         restaurantResponseList = restaurantService.getRestaurantByName(reastaurantName);
-        if (restaurantResponseList == null)
+        if (restaurantResponseList == null || restaurantResponseList.size() == 0)
             return new ResponseEntity<>("No Restaurant by this name!", HttpStatus.NOT_FOUND);
         else
             return new ResponseEntity<>(restaurantResponseList, HttpStatus.OK);
@@ -69,7 +69,7 @@ public class RestaurantController {
     @CrossOrigin
     public ResponseEntity<?> getResturantsByCategory(@PathVariable("categoryName") String categoryName) {
         restaurantResponseList = restaurantService.getRestaurantByCategory(categoryName);
-        if (restaurantResponseList == null)
+        if (restaurantResponseList == null || restaurantResponseList.size() == 0)
             return new ResponseEntity<>("No Restaurant under this category!", HttpStatus.NOT_FOUND);
         else {
             return new ResponseEntity<>(restaurantResponseList, HttpStatus.OK);
