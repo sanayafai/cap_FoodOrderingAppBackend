@@ -15,7 +15,7 @@ import org.upgrad.models.Category;
 @Repository
 public interface CategoryRepository extends CrudRepository<Category, Integer> {
 
-    @Query(nativeQuery = true, value = "SELECT * FROM CATEGORY order by category_name DESC")
+    @Query(nativeQuery = true, value = "SELECT * FROM CATEGORY order by category_name ASC")
     Iterable<Category> getCategories();
 
     @Query(nativeQuery = true, value = "SELECT * FROM CATEGORY WHERE ID=?1")
