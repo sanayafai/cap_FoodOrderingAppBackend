@@ -27,7 +27,6 @@ public class RestaurantController {
 
     private List<RestaurantResponse> restaurantResponseList;
 
-
     /**
      * This endpoint  retrieves all the restaurants in order of their ratings and display the response in a JSON format
      * with the corresponding HTTP status.
