@@ -10,7 +10,9 @@ import org.upgrad.requestResponseEntity.ItemQuantity;
 
 import java.util.Date;
 import java.util.List;
-
+/**
+ * This repository interface is responsible for the interaction between the Order service with the Order database
+ */
 @Repository
 public interface OrderRepository extends CrudRepository<Order, Integer> {
 

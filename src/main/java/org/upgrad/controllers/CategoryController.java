@@ -3,6 +3,7 @@ package org.upgrad.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,16 +17,22 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
+    /**
+     * This api gets all categories in sorted order oby its name
+     * @return list of categories
+     */
     @GetMapping("/category")
+    @CrossOrigin
     public ResponseEntity<?> getAllCategories() {
         return new ResponseEntity<>(categoryService.getAllCategories(), HttpStatus.OK);
     }
 
     @GetMapping("/category/{categoryName}")
     public ResponseEntity<?> getCategoriesByName(@PathVariable("categoryName") String categoryName) {
-        Category category = categoryService.getCategory(categoryName);
+
+        Category category = categoryService.getCategory(categoryName.trim());
         if (category != null) {
-            return new ResponseEntity<>(categoryService.getCategory(categoryName), HttpStatus.OK);
+            return new ResponseEntity<>(category, HttpStatus.OK);
         }else {
             return new ResponseEntity<>("No Category by this name!", HttpStatus.NOT_FOUND);
         }
