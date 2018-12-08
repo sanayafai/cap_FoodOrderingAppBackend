@@ -46,7 +46,7 @@ public class UserController {
         else if (!isEmailValid(email)) {
             return new ResponseEntity<>("Invalid email-id format!", HttpStatus.BAD_REQUEST);
         }
-        else if (contactNumber.length()!=10 || !isContactNumberValid(contactNumber)) {
+        else if (!isContactNumberValid(contactNumber)) {
             return new ResponseEntity<>("Invalid contact number!", HttpStatus.BAD_REQUEST);
         }
         else if (!isPasswordStrong(password)) {
@@ -177,12 +177,11 @@ public class UserController {
      * Using Regex and pattern matcher to check contact number validity
      */
     public static boolean isContactNumberValid (String contactNumber) {
-        try {
-            Integer.parseInt(contactNumber);
-        } catch (NumberFormatException ex) {
+        if (contactNumber.matches("\\d{10}")) {
+            return true;
+        } else {
             return false;
         }
-        return true;
     }
 
     /*
