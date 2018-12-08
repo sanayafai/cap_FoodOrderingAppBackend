@@ -25,7 +25,6 @@ public class AddressController {
     /*
      * This endpoint is to get all states.
      */
-
     @GetMapping("/states")
     @CrossOrigin
     public ResponseEntity<?> allStates() {

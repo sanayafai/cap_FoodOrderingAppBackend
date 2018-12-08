@@ -28,6 +28,7 @@ public class OrderController {
     private UserAuthTokenService userAuthTokenService;
 
     @GetMapping("/coupon/{couponName}")
+    @CrossOrigin
     public ResponseEntity<?> getCouponByName(@PathVariable("couponName") String couponName,
                                              @RequestHeader("accessToken") String accessToken) {
         if (userAuthTokenService.isUserLoggedIn(accessToken) == null) {
@@ -46,6 +47,7 @@ public class OrderController {
     }
 
     @GetMapping("")
+    @CrossOrigin
     public ResponseEntity<?> getOrdersByUser(@RequestHeader("accessToken") String accessToken) {
 
         if (userAuthTokenService.isUserLoggedIn(accessToken) == null) {
@@ -66,6 +68,7 @@ public class OrderController {
     }
 
     @PostMapping("")
+    @CrossOrigin
     public ResponseEntity<?> addOrder(@RequestParam(value = "addressId", required = false) Integer addressId,
                                       @RequestParam(value = "flatBuilNo", required = false) String flatBuilNo,
                                       @RequestParam(value = "locality", required = false) String locality,

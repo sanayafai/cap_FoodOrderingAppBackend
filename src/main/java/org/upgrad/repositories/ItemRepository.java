@@ -5,7 +5,9 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import java.util.Set;
 import org.upgrad.models.Item;
-
+/**
+ * This repository interface is responsible for the interaction between the Item service with the Item database
+ */
 @Repository
 public interface ItemRepository extends CrudRepository<Item,Integer> {
   

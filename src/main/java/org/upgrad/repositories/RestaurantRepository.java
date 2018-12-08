@@ -25,7 +25,7 @@ public interface RestaurantRepository extends CrudRepository<Restaurant, Integer
     List<Restaurant> findRestaurantByName(String restaurantName);
 
     @Query(nativeQuery = true, value = "SELECT * FROM RESTAURANT r inner join restaurant_category rc on r.id = rc.restaurant_id " +
-            "inner join category c on  rc.category_id = c.id WHERE c.category_name ILIKE %?1% ORDER BY r.restaurant_name")
+            "inner join category c on  rc.category_id = c.id WHERE c.category_name ~* ?1 ORDER BY r.restaurant_name")
     List<Restaurant> findRestaurantByCategory(String categoryName);
 
     @Query(nativeQuery = true, value = "SELECT * FROM RESTAURANT WHERE id=?1")
@@ -33,6 +33,6 @@ public interface RestaurantRepository extends CrudRepository<Restaurant, Integer
 
     @Transactional
     @Modifying(clearAutomatically = true, flushAutomatically = true)
-    @Query(nativeQuery = true, value = "UPDATE RESTAURANT SET user_rating = ?1 WHERE id=?2")
-    int updateRating(int rating, int id);
+    @Query(nativeQuery = true, value = "UPDATE RESTAURANT SET user_rating = ?1, number_of_users_rated= ?2 WHERE id=?3")
+    int updateRating(int rating, int numUserRated, int id);
 }

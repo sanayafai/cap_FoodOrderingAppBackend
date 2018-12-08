@@ -8,6 +8,12 @@ import org.upgrad.requestResponseEntity.ItemQuantity;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This OrderService interface gives the list of all the service that exist in the order service implementation class.
+ * Controller class will be calling the service methods by this interface.
+ *
+ * @author Chandra Prakash Tekam
+ */
 public interface OrderService {
 
     Coupon getCoupon(String couponName);
