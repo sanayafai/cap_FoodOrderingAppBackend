@@ -29,9 +29,10 @@ public class CategoryController {
 
     @GetMapping("/category/{categoryName}")
     public ResponseEntity<?> getCategoriesByName(@PathVariable("categoryName") String categoryName) {
-        Category category = categoryService.getCategory(categoryName);
+
+        Category category = categoryService.getCategory(categoryName.trim());
         if (category != null) {
-            return new ResponseEntity<>(categoryService.getCategory(categoryName), HttpStatus.OK);
+            return new ResponseEntity<>(category, HttpStatus.OK);
         }else {
             return new ResponseEntity<>("No Category by this name!", HttpStatus.NOT_FOUND);
         }

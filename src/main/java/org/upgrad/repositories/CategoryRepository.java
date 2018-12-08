@@ -21,10 +21,10 @@ public interface CategoryRepository extends CrudRepository<Category, Integer> {
     @Query(nativeQuery = true, value = "SELECT * FROM CATEGORY WHERE ID=?1")
     Category getCategoryById(int id);
 
-    @Query(nativeQuery = true, value = "SELECT * FROM CATEGORY WHERE CATEGORY_NAME=?1")
+    @Query(nativeQuery = true, value = "SELECT * FROM CATEGORY WHERE category_name ~* ?1")
     Category getCategoryByName(String categoryName);
 
-    @Query(nativeQuery = true, value = "SELECT count(*) FROM CATEGORY WHERE CATEGORY_NAME=?1")
+    @Query(nativeQuery = true, value = "SELECT count(*) FROM CATEGORY WHERE CATEGORY_NAME ~* ?1")
     Integer getCategoryCountByName(String categoryName);
 
     @Query(nativeQuery = true, value = "SELECT CATEGORY_NAME FROM CATEGORY WHERE ID=?1 ORDER BY CATEGORY_NAME ASC")
