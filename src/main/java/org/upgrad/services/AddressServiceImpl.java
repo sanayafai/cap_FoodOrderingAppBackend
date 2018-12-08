@@ -62,6 +62,11 @@ public class AddressServiceImpl implements AddressService{
     }
 
     @Override
+    public void updatePermAddressWithoutState(String flatBuilNumber, String locality, String city, String zipcode, Integer addressId) {
+        addressRepository.updatePermAddressWithoutState(flatBuilNumber, locality, city, zipcode, addressId);
+    }
+
+    @Override
     public Boolean deletePermAddressById (int addressId) {
         Boolean success = false;
         addressRepository.deletePermAddressById(addressId);
