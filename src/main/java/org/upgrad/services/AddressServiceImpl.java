@@ -53,8 +53,14 @@ public class AddressServiceImpl implements AddressService{
 
     @Override
     public void updatePermAddress (String flatBuilNumber, String locality, String city, String zipcode, Integer stateId, Integer addressId) {
-        addressRepository.updatePermAddress(flatBuilNumber, locality, city, zipcode, stateId, addressId);
-    }
+        if(stateId == null){
+            addressRepository.updatePermAddress(flatBuilNumber, locality, city, zipcode, addressId);
+
+        }else{
+            addressRepository.updatePermAddressWithOutStateId(flatBuilNumber, locality, city, zipcode, stateId, addressId);
+
+        }
+           }
 
     @Override
     public List<Address> getPermAddress (int userId) {
