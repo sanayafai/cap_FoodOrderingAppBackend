@@ -13,7 +13,7 @@ public class Address {
     private String zipcode;
 
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id", nullable = false)
+    @JoinColumn(name = "state_id", nullable = false)
     private States state;
 
     public Address() {
