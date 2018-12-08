@@ -25,7 +25,6 @@ public class AddressController {
     /*
      * This endpoint is to get all states.
      */
-
     @GetMapping("/states")
     @CrossOrigin
     public ResponseEntity<?> allStates() {
@@ -40,24 +39,22 @@ public class AddressController {
      */
     @PostMapping("/address")
     @CrossOrigin
-    public ResponseEntity<?> addAddress (@RequestParam String flatBuilNo, @RequestParam String locality, @RequestParam String city, @RequestParam String zipcode, String type, @RequestParam Integer stateId, @RequestHeader String accessToken) {
-        if(userAuthTokenService.isUserLoggedIn(accessToken) == null){
+    public ResponseEntity<?> addAddress(@RequestParam String flatBuilNo, @RequestParam String locality, @RequestParam String city, @RequestParam String zipcode, String type, @RequestParam Integer stateId, @RequestHeader String accessToken) {
+        if (userAuthTokenService.isUserLoggedIn(accessToken) == null) {
             return new ResponseEntity<>("Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
-        }
-        else if(userAuthTokenService.isUserLoggedIn(accessToken).getLogoutAt()!=null){
+        } else if (userAuthTokenService.isUserLoggedIn(accessToken).getLogoutAt() != null) {
             return new ResponseEntity<>("You have already logged out. Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
-        }  else{
+        } else {
             // Only setting temp OR perm values if the user is authenticated.
-            if (type==null || !type.equals("perm")) {
+            if (type == null || !type.equals("perm")) {
                 type = "temp";
             } else {
                 type = "perm";
             }
             // Checking if zip code is valid.
-            if (!isZipcodeValid(zipcode) || zipcode.length()!=6) {
+            if (!isZipcodeValid(zipcode) || zipcode.length() != 6) {
                 return new ResponseEntity<>("Invalid zipcode!", HttpStatus.BAD_REQUEST);
-            }
-            else {
+            } else {
                 //Adding new address to the address table.
                 addressService.addAddress(flatBuilNo, locality, city, zipcode, stateId);
                 //Finding the Id for the latest entry in address table.
@@ -78,16 +75,18 @@ public class AddressController {
      */
     @PutMapping("/address/{addressId}")
     @CrossOrigin
-    public ResponseEntity<?> updatePermAddress (@PathVariable("addressId") int addressId, String flatBuilNo, String locality, String city, String zipcode, Integer stateId, @RequestHeader String accessToken ){
-        if(userAuthTokenService.isUserLoggedIn(accessToken) == null){
+    public ResponseEntity<?> updatePermAddress(@PathVariable("addressId") int addressId, String flatBuilNo, String locality, String city, String zipcode, Integer stateId, @RequestHeader String accessToken) {
+        if (userAuthTokenService.isUserLoggedIn(accessToken) == null) {
             return new ResponseEntity<>("Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
-        }
-        else if(userAuthTokenService.isUserLoggedIn(accessToken).getLogoutAt()!=null){
+        } else if (userAuthTokenService.isUserLoggedIn(accessToken).getLogoutAt() != null) {
             return new ResponseEntity<>("You have already logged out. Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
-        }  else {
-            if (!isZipcodeValid(zipcode) || zipcode.length()!=6) {
-                return new ResponseEntity<>("Invalid zipcode!", HttpStatus.BAD_REQUEST);
-            } else if (!addressService.getAddress(addressId)) {
+        } else {
+            if (zipcode != null) {
+                if (!isZipcodeValid(zipcode) || zipcode.length() != 6) {
+                    return new ResponseEntity<>("Invalid zipcode!", HttpStatus.BAD_REQUEST);
+                }
+            }
+            if (!addressService.getAddress(addressId)) {
                 return new ResponseEntity<>("No address with this address id!", HttpStatus.BAD_REQUEST);
             } else {
                 addressService.updatePermAddress(flatBuilNo, locality, city, zipcode, stateId, addressId);
@@ -102,11 +101,10 @@ public class AddressController {
      */
     @GetMapping("/address/user")
     @CrossOrigin
-    public ResponseEntity<?> getAllPermAddressByUser (@RequestHeader String accessToken) {
-        if(userAuthTokenService.isUserLoggedIn(accessToken) == null){
+    public ResponseEntity<?> getAllPermAddressByUser(@RequestHeader String accessToken) {
+        if (userAuthTokenService.isUserLoggedIn(accessToken) == null) {
             return new ResponseEntity<>("Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
-        }
-        else if(userAuthTokenService.isUserLoggedIn(accessToken).getLogoutAt()!=null){
+        } else if (userAuthTokenService.isUserLoggedIn(accessToken).getLogoutAt() != null) {
             return new ResponseEntity<>("You have already logged out. Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
         } else {
             int userId = userAuthTokenService.getUserId(accessToken);
@@ -124,13 +122,12 @@ public class AddressController {
      * Requires authentication.
      * Takes in the address id as path variables and deletes it from the address table.
      */
-    @DeleteMapping ("/address/{addressId}")
+    @DeleteMapping("/address/{addressId}")
     @CrossOrigin
-    public ResponseEntity<?> deletePermAddress (@PathVariable("addressId") int addressId, @RequestHeader String accessToken) {
-        if(userAuthTokenService.isUserLoggedIn(accessToken) == null){
+    public ResponseEntity<?> deletePermAddress(@PathVariable("addressId") int addressId, @RequestHeader String accessToken) {
+        if (userAuthTokenService.isUserLoggedIn(accessToken) == null) {
             return new ResponseEntity<>("Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
-        }
-        else if(userAuthTokenService.isUserLoggedIn(accessToken).getLogoutAt()!=null){
+        } else if (userAuthTokenService.isUserLoggedIn(accessToken).getLogoutAt() != null) {
             return new ResponseEntity<>("You have already logged out. Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
         } else {
             if (!addressService.getAddress(addressId)) {
@@ -143,9 +140,8 @@ public class AddressController {
     }
 
 
-
     //Method to check if a zip code is a valid 6 digit number.
-    public static boolean isZipcodeValid (String zipcode) {
+    public static boolean isZipcodeValid(String zipcode) {
         try {
             Integer.parseInt(zipcode);
         } catch (NumberFormatException ex) {
