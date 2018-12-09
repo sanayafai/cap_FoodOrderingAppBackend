@@ -10,7 +10,8 @@ public class ItemQuantity {
     private Integer itemId;
     private Integer quantity;
 
-    public ItemQuantity(){}
+    public ItemQuantity() {
+    }
 
     public ItemQuantity(Integer itemId, Integer quantity) {
         this.itemId = itemId;

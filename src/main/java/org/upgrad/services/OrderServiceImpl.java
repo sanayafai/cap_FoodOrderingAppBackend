@@ -2,11 +2,10 @@ package org.upgrad.services;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.upgrad.models.*;
-
+import org.upgrad.models.Coupon;
+import org.upgrad.models.Item;
 import org.upgrad.models.Order;
 import org.upgrad.repositories.AddressRepository;
-
 import org.upgrad.repositories.CouponRepository;
 import org.upgrad.repositories.ItemRepository;
 import org.upgrad.repositories.OrderRepository;

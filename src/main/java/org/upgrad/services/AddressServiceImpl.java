@@ -11,28 +11,28 @@ import java.util.List;
 
 @Service
 @Transactional
-public class AddressServiceImpl implements AddressService{
+public class AddressServiceImpl implements AddressService {
 
     private final StateRepository stateRepository;
     private final AddressRepository addressRepository;
 
-    public AddressServiceImpl (StateRepository stateRepository, AddressRepository addressRepository) {
+    public AddressServiceImpl(StateRepository stateRepository, AddressRepository addressRepository) {
         this.stateRepository = stateRepository;
         this.addressRepository = addressRepository;
     }
 
     @Override
-    public List<States> getAllStates(){
+    public List<States> getAllStates() {
         return stateRepository.getAllStates();
     }
 
     @Override
-    public void addAddress (String flatBuilNumber, String locality, String city, String zipcode, Integer stateId) {
+    public void addAddress(String flatBuilNumber, String locality, String city, String zipcode, Integer stateId) {
         addressRepository.addAddress(flatBuilNumber, locality, city, zipcode, stateId);
     }
 
     @Override
-    public void userAddressMapping (String type, Integer userId, Integer addressId) {
+    public void userAddressMapping(String type, Integer userId, Integer addressId) {
         addressRepository.userAddressMapping(type, userId, addressId);
     }
 
@@ -52,18 +52,18 @@ public class AddressServiceImpl implements AddressService{
     }
 
     @Override
-    public void updatePermAddress (String flatBuilNumber, String locality, String city, String zipcode, Integer stateId, Integer addressId) {
-        if(stateId == null){
+    public void updatePermAddress(String flatBuilNumber, String locality, String city, String zipcode, Integer stateId, Integer addressId) {
+        if (stateId == null) {
             addressRepository.updatePermAddress(flatBuilNumber, locality, city, zipcode, addressId);
 
-        }else{
+        } else {
             addressRepository.updatePermAddressWithOutStateId(flatBuilNumber, locality, city, zipcode, stateId, addressId);
 
         }
-           }
+    }
 
     @Override
-    public List<Address> getPermAddress (int userId) {
+    public List<Address> getPermAddress(int userId) {
         return addressRepository.getPermAddress(userId);
     }
 
@@ -73,7 +73,7 @@ public class AddressServiceImpl implements AddressService{
     }
 
     @Override
-    public Boolean deletePermAddressById (int addressId) {
+    public Boolean deletePermAddressById(int addressId) {
         Boolean success = false;
         addressRepository.deletePermAddressById(addressId);
         if (addressRepository.getAddress(addressId) == null) {

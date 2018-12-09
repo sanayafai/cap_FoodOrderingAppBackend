@@ -23,17 +23,17 @@ public class User {
     @Column(name = "lastname")
     private String lastName;
 
-    @Column(name = "email",nullable = false)
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "contact_number",nullable = false, unique = true)
+    @Column(name = "contact_number", nullable = false, unique = true)
     private String contactNumber;
 
     @Column(nullable = false)
     @JsonIgnore
     private String password;
 
-    public User(){
+    public User() {
     }
 
     public User(String firstName, String lastName, String email, String contactNumber, String password) {

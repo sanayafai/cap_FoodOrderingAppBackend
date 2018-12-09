@@ -5,9 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -24,9 +22,7 @@ import static java.util.Collections.singletonList;
 import static org.assertj.core.util.DateUtil.now;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON;
 
 // This class contains all the test cases regarding the address controller
@@ -44,7 +40,7 @@ public class AddressControllerTest {
     private UserAuthTokenService userAuthTokenService;
 
     @Test
-    public void saveAddressWithoutLogin() throws Exception{
+    public void saveAddressWithoutLogin() throws Exception {
         String flatBuilNo = "123/32 Nishuvi Building";
         String locality = "Worli";
         String city = "Mumbai";
@@ -67,7 +63,7 @@ public class AddressControllerTest {
     }
 
     @Test
-    public void saveAddressWithLoggedOutUser() throws Exception{
+    public void saveAddressWithLoggedOutUser() throws Exception {
         String flatBuilNo = "123/32 Nishuvi Building";
         String locality = "Worli";
         String city = "Mumbai";
@@ -92,7 +88,7 @@ public class AddressControllerTest {
     }
 
     @Test
-    public void saveAddressWithInvalidZipcode() throws Exception{
+    public void saveAddressWithInvalidZipcode() throws Exception {
         String flatBuilNo = "123/32 Nishuvi Building";
         String locality = "Worli";
         String city = "Mumbai";
@@ -116,7 +112,7 @@ public class AddressControllerTest {
     }
 
     @Test
-    public void saveAddress() throws Exception{
+    public void saveAddress() throws Exception {
         String flatBuilNo = "123/32 Nishuvi Building";
         String locality = "Worli";
         String city = "Mumbai";
@@ -142,7 +138,7 @@ public class AddressControllerTest {
     }
 
     @Test
-    public void updateAddressWithoutLogin() throws Exception{
+    public void updateAddressWithoutLogin() throws Exception {
         String flatBuilNo = "123/32 Nishuvi Building";
         String locality = "Worli";
         String city = "Mumbai";
@@ -165,7 +161,7 @@ public class AddressControllerTest {
     }
 
     @Test
-    public void updateAddressWithLoggedOutUser() throws Exception{
+    public void updateAddressWithLoggedOutUser() throws Exception {
         String flatBuilNo = "123/32 Nishuvi Building";
         String locality = "Worli";
         String city = "Mumbai";
@@ -190,7 +186,7 @@ public class AddressControllerTest {
     }
 
     @Test
-    public void updateAddressWithInvalidZipcode() throws Exception{
+    public void updateAddressWithInvalidZipcode() throws Exception {
         String flatBuilNo = "123/32 Nishuvi Building";
         String locality = "Worli";
         String city = "Mumbai";
@@ -214,7 +210,7 @@ public class AddressControllerTest {
     }
 
     @Test
-    public void updateAddressWithInvalifAddressId() throws Exception{
+    public void updateAddressWithInvalifAddressId() throws Exception {
         String flatBuilNo = "123/32 Nishuvi Building";
         String locality = "Worli";
         String city = "Mumbai";
@@ -239,7 +235,7 @@ public class AddressControllerTest {
     }
 
     @Test
-    public void updateAddress() throws Exception{
+    public void updateAddress() throws Exception {
         String flatBuilNo = "123/32 Nishuvi Building";
         String locality = "Worli";
         String city = "Mumbai";
@@ -264,7 +260,7 @@ public class AddressControllerTest {
     }
 
     @Test
-    public void getAddressesWithoutLogin() throws Exception{
+    public void getAddressesWithoutLogin() throws Exception {
         String accessToken = "#############################";
         Mockito.when(userAuthTokenService.isUserLoggedIn(accessToken)).thenReturn(null);
         String url = "/address/user";
@@ -275,7 +271,7 @@ public class AddressControllerTest {
     }
 
     @Test
-    public void getAddressesWithLoggedOutUser() throws Exception{
+    public void getAddressesWithLoggedOutUser() throws Exception {
         String accessToken = "#############################";
         UserAuthToken userAuthToken = new UserAuthToken();
         userAuthToken.setLogoutAt(now());
@@ -288,7 +284,7 @@ public class AddressControllerTest {
     }
 
     @Test
-    public void getAddressesWithNoSavedAddress() throws Exception{
+    public void getAddressesWithNoSavedAddress() throws Exception {
         String accessToken = "#############################";
         UserAuthToken userAuthToken = new UserAuthToken();
         Integer userId = 1;
@@ -303,7 +299,7 @@ public class AddressControllerTest {
     }
 
     @Test
-    public void getAddressesByUser() throws Exception{
+    public void getAddressesByUser() throws Exception {
         String accessToken = "#############################";
         UserAuthToken userAuthToken = new UserAuthToken();
         Integer userId = 1;
@@ -319,12 +315,12 @@ public class AddressControllerTest {
                 .contentType(MediaType.asMediaType(APPLICATION_JSON))
                 .header("accessToken", accessToken))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("$[0].city", Matchers.is("Mumbai")));   }
-
+                .andExpect(jsonPath("$[0].city", Matchers.is("Mumbai")));
+    }
 
 
     @Test
-    public void deleteAddressWithoutLogin() throws Exception{
+    public void deleteAddressWithoutLogin() throws Exception {
         String accessToken = "#############################";
         Mockito.when(userAuthTokenService.isUserLoggedIn(accessToken)).thenReturn(null);
         String url = "/address/1";
@@ -335,7 +331,7 @@ public class AddressControllerTest {
     }
 
     @Test
-    public void deleteAddressWithLoggedOutUser() throws Exception{
+    public void deleteAddressWithLoggedOutUser() throws Exception {
         String accessToken = "#############################";
         UserAuthToken userAuthToken = new UserAuthToken();
         userAuthToken.setLogoutAt(now());
@@ -349,7 +345,7 @@ public class AddressControllerTest {
 
 
     @Test
-    public void deleteAddressWithInvalidAddressId() throws Exception{
+    public void deleteAddressWithInvalidAddressId() throws Exception {
         String accessToken = "#############################";
         UserAuthToken userAuthToken = new UserAuthToken();
         Mockito.when(userAuthTokenService.isUserLoggedIn(accessToken)).thenReturn(userAuthToken);
@@ -362,7 +358,7 @@ public class AddressControllerTest {
     }
 
     @Test
-    public void deleteAddress() throws Exception{
+    public void deleteAddress() throws Exception {
         String accessToken = "#############################";
         UserAuthToken userAuthToken = new UserAuthToken();
         Mockito.when(userAuthTokenService.isUserLoggedIn(accessToken)).thenReturn(userAuthToken);
@@ -375,7 +371,7 @@ public class AddressControllerTest {
     }
 
     @Test
-    public void getAllStates() throws Exception{
+    public void getAllStates() throws Exception {
         States states = new States();
         states.setId(1);
         states.setStateName("Maharashtra");

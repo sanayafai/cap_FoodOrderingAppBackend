@@ -7,9 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -21,12 +19,9 @@ import org.upgrad.services.UserService;
 
 import static org.assertj.core.util.DateUtil.now;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON;
 
 // This class contains all the test cases regarding the user controller
@@ -44,7 +39,7 @@ public class UserControllerTest {
     private UserAuthTokenService userAuthTokenService;
 
     @Test
-    public void registerUserWithAlreadyRegisteredContactNumber() throws Exception{
+    public void registerUserWithAlreadyRegisteredContactNumber() throws Exception {
         User user = new User();
         user.setId(1);
         user.setContactNumber("1234567890");
@@ -66,7 +61,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void registerUserWithFaultyEmail() throws Exception{
+    public void registerUserWithFaultyEmail() throws Exception {
         String firstName = "software";
         String lastName = "development";
         String email = "x.y@com";
@@ -85,7 +80,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void registerUserWithFaultyContactNumber() throws Exception{
+    public void registerUserWithFaultyContactNumber() throws Exception {
         String firstName = "software";
         String lastName = "development";
         String email = "x@y.com";
@@ -104,7 +99,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void registerUserWithFaultyPassword() throws Exception{
+    public void registerUserWithFaultyPassword() throws Exception {
         String firstName = "software";
         String lastName = "development";
         String email = "x@y.com";
@@ -123,7 +118,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void successfulSignup() throws Exception{
+    public void successfulSignup() throws Exception {
         String firstName = "software";
         String lastName = "development";
         String email = "x@y.com";
@@ -142,7 +137,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void updateUserDetailsWithoutLogin() throws Exception{
+    public void updateUserDetailsWithoutLogin() throws Exception {
         String firstName = "software";
         String lastName = "development";
         String accessToken = "#############################";
@@ -157,7 +152,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void updateUserDetailsWithLoggedOutUser() throws Exception{
+    public void updateUserDetailsWithLoggedOutUser() throws Exception {
         String firstName = "software";
         String lastName = "development";
         String accessToken = "#############################";
@@ -174,18 +169,18 @@ public class UserControllerTest {
     }
 
     @Test
-    public void updateUserDetails() throws Exception{
+    public void updateUserDetails() throws Exception {
         String firstName = "software";
         String lastName = "development";
         String accessToken = "#############################";
         User user = new User();
         user.setId(1);
         user.setFirstName("soft");
-        Integer userId=1;
+        Integer userId = 1;
         UserAuthToken userAuthToken = new UserAuthToken();
         Mockito.when(userAuthTokenService.isUserLoggedIn(accessToken)).thenReturn(userAuthToken);
         Mockito.when(userAuthTokenService.getUserId(accessToken)).thenReturn(1);
-        Mockito.when(userService.updateUser(firstName,lastName,userId)).thenReturn(user);
+        Mockito.when(userService.updateUser(firstName, lastName, userId)).thenReturn(user);
         String url = "/user";
         mvc.perform(put(url)
                 .contentType(MediaType.asMediaType(APPLICATION_JSON))
@@ -193,10 +188,11 @@ public class UserControllerTest {
                 .param("lastName", lastName)
                 .header("accessToken", accessToken))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("$.firstName", Matchers.is("soft"))); }
+                .andExpect(jsonPath("$.firstName", Matchers.is("soft")));
+    }
 
     @Test
-    public void updateUserPasswordWithoutLogin() throws Exception{
+    public void updateUserPasswordWithoutLogin() throws Exception {
         String oldPassword = "Upgrad@12345";
         String newPassword = "Upgrad@123";
         String accessToken = "#############################";
@@ -211,7 +207,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void updateUserPasswordWithLoggedOutUser() throws Exception{
+    public void updateUserPasswordWithLoggedOutUser() throws Exception {
         String oldPassword = "Upgrad@12345";
         String newPassword = "Upgrad@123";
         String accessToken = "#############################";
@@ -300,4 +296,4 @@ public class UserControllerTest {
                 .andExpect(content().string(containsString("Password updated successfully!")));
     }
 
-    }
+}

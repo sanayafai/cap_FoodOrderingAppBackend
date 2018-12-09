@@ -10,7 +10,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.upgrad.models.Item;
-import org.upgrad.requestResponseEntity.RestaurantResponse;
 import org.upgrad.requestResponseEntity.RestaurantResponseCategorySet;
 import org.upgrad.services.ItemService;
 import org.upgrad.services.RestaurantService;
@@ -20,10 +19,7 @@ import java.util.List;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 // This class contains all the test cases regarding the item controller
 @RunWith(SpringRunner.class)
@@ -41,7 +37,7 @@ public class ItemControllerTest {
 
 
     @Test
-    public void getPopularItemsByIncorrectRestaurantId() throws Exception{
+    public void getPopularItemsByIncorrectRestaurantId() throws Exception {
         Mockito.when(restaurantService.getRestaurantDetails(1)).thenReturn(null);
         String url = "/item/restaurant/1";
         mvc.perform(get(url))
@@ -50,7 +46,7 @@ public class ItemControllerTest {
     }
 
     @Test
-    public void getPopularItemsByRestaurantId() throws Exception{
+    public void getPopularItemsByRestaurantId() throws Exception {
         RestaurantResponseCategorySet restaurant = new RestaurantResponseCategorySet();
         restaurant.setId(1);
         restaurant.setRestaurantName("dominoz");

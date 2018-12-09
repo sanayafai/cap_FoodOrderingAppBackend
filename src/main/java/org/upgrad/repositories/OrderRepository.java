@@ -6,10 +6,9 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.upgrad.models.Order;
-import org.upgrad.requestResponseEntity.ItemQuantity;
 
-import java.util.Date;
 import java.util.List;
+
 /**
  * This repository interface is responsible for the interaction between the Order service with the Order database
  */

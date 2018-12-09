@@ -1,7 +1,8 @@
 package org.upgrad.models;
-import javax.persistence.*;
-import com.fasterxml.jackson.annotation.JsonInclude;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -14,7 +15,7 @@ import java.util.Set;
  * @author Chandra Prakash Tekam
  */
 @Entity
-@Table(name="category")
+@Table(name = "category")
 public class Category {
 
     @Id

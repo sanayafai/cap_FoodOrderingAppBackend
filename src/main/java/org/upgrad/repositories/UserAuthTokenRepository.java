@@ -12,14 +12,14 @@ import org.upgrad.models.UserAuthToken;
 @Repository
 public interface UserAuthTokenRepository extends CrudRepository<UserAuthToken, Integer> {
 
-    @Query(nativeQuery = true,value = "SELECT * FROM USER_AUTH_TOKEN WHERE access_token=?1")
+    @Query(nativeQuery = true, value = "SELECT * FROM USER_AUTH_TOKEN WHERE access_token=?1")
     UserAuthToken isUserLoggedIn(String accessToken);
 
     @Transactional
     @Modifying
-    @Query(nativeQuery = true,value="UPDATE USER_AUTH_TOKEN SET logout_at=NOW() WHERE access_token=?1")
-    void removeAuthToken( String accessToken);
+    @Query(nativeQuery = true, value = "UPDATE USER_AUTH_TOKEN SET logout_at=NOW() WHERE access_token=?1")
+    void removeAuthToken(String accessToken);
 
-    @Query(nativeQuery =  true,value = "select user_id from user_auth_token where access_token=?1")
-    int getUserId (String accessToken);
+    @Query(nativeQuery = true, value = "select user_id from user_auth_token where access_token=?1")
+    int getUserId(String accessToken);
 }

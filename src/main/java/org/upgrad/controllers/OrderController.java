@@ -12,7 +12,6 @@ import org.upgrad.services.UserAuthTokenService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Chanda Prakash Tekam
