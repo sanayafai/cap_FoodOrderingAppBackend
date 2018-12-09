@@ -13,7 +13,8 @@ public class Payment {
 
     private String paymentName;
 
-    public  Payment(){}
+    public Payment() {
+    }
 
     public Payment(int id, String paymentName) {
         this.id = id;

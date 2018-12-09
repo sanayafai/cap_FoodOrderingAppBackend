@@ -32,12 +32,10 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON;
 @WebMvcTest(RestaurantController.class)
 public class RestaurantControllerTest {
 
-    @Autowired
-    private MockMvc mvc;
-
     @MockBean
     RestaurantService restaurantService;
-
+    @Autowired
+    private MockMvc mvc;
     @MockBean
     private UserAuthTokenService userAuthTokenService;
 

@@ -7,12 +7,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.Console;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.upgrad.models.User;
 import org.upgrad.services.UserAuthTokenService;
 import org.upgrad.services.UserService;
@@ -20,7 +14,6 @@ import org.upgrad.services.UserService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @RestController
@@ -34,25 +27,55 @@ public class UserController {
     private UserAuthTokenService userAuthTokenService;
 
     /*
+     * Using Regex and pattern matcher to check email validity
+     */
+    private static boolean isEmailValid(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\." +
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
+
+        Pattern pat = Pattern.compile(emailRegex);
+        if (email == null)
+            return false;
+        return pat.matcher(email).matches();
+    }
+
+    /*
+     * Using Regex and pattern matcher to check contact number validity
+     */
+    private static boolean isContactNumberValid(String contactNumber) {
+        return contactNumber.matches("\\d{10}");
+    }
+
+    /*
+     * Using Regex and pattern matcher to check password strength
+     */
+    private static boolean isPasswordStrong(String password) {
+        String passwordRegex = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[#@$%&*!^]).{8,}$";
+        Pattern pat = Pattern.compile(passwordRegex);
+        if (password == null)
+            return false;
+
+        return pat.matcher(password).matches();
+    }
+
+    /*
      * This endpoint is to handle new user signup.
      *
      */
     @PostMapping("/signup")
     @CrossOrigin
     public ResponseEntity<?> signup(@RequestParam String firstName, String lastName, @RequestParam String email, @RequestParam String contactNumber, @RequestParam String password) {
-        if (userService.findUser(contactNumber)!=null) {
-            return new ResponseEntity<>("Try any other contact number, this contact number has already been registered!",HttpStatus.BAD_REQUEST);
-        }
-        else if (!isEmailValid(email)) {
+        if (userService.findUser(contactNumber) != null) {
+            return new ResponseEntity<>("Try any other contact number, this contact number has already been registered!", HttpStatus.BAD_REQUEST);
+        } else if (!isEmailValid(email)) {
             return new ResponseEntity<>("Invalid email-id format!", HttpStatus.BAD_REQUEST);
-        }
-        else if (!isContactNumberValid(contactNumber)) {
+        } else if (!isContactNumberValid(contactNumber)) {
             return new ResponseEntity<>("Invalid contact number!", HttpStatus.BAD_REQUEST);
-        }
-        else if (!isPasswordStrong(password)) {
-            return  new ResponseEntity<>("Weak password!", HttpStatus.BAD_REQUEST);
-        }
-        else {
+        } else if (!isPasswordStrong(password)) {
+            return new ResponseEntity<>("Weak password!", HttpStatus.BAD_REQUEST);
+        } else {
             String sha256hex = Hashing.sha256()
                     .hashString(password, Charsets.US_ASCII)
                     .toString();
@@ -62,48 +85,48 @@ public class UserController {
     }
 
     /*
-    * This endpoint is used to login a user.
-    * Here contact number and password has to be provided to match the credentials.
-    */
+     * This endpoint is used to login a user.
+     * Here contact number and password has to be provided to match the credentials.
+     */
     @PostMapping("/login")
     @CrossOrigin
-    public ResponseEntity<?> login(@RequestParam String contactNumber, @RequestParam String password){
+    public ResponseEntity<?> login(@RequestParam String contactNumber, @RequestParam String password) {
         String passwordByUser = String.valueOf(userService.findUserPassword(contactNumber));
         String sha256hex = Hashing.sha256()
                 .hashString(password, Charsets.US_ASCII)
                 .toString();
-        if(userService.findUserPassword(contactNumber)==null) return new ResponseEntity<>("This contact number has not been registered!",HttpStatus.OK);
+        if (userService.findUserPassword(contactNumber) == null)
+            return new ResponseEntity<>("This contact number has not been registered!", HttpStatus.OK);
         else if (!(passwordByUser.equalsIgnoreCase(sha256hex))) {
-            return new ResponseEntity<>("Invalid Credentials",HttpStatus.UNAUTHORIZED);
-        }
-        else{
+            return new ResponseEntity<>("Invalid Credentials", HttpStatus.UNAUTHORIZED);
+        } else {
             User user = userService.findUser(contactNumber);
             String accessToken = UUID.randomUUID().toString();
-            userAuthTokenService.addAccessToken(user.getId(),accessToken);
+            userAuthTokenService.addAccessToken(user.getId(), accessToken);
             HttpHeaders headers = new HttpHeaders();
             headers.add("access-token", accessToken);
             List<String> header = new ArrayList<>();
             header.add("access-token");
             headers.setAccessControlExposeHeaders(header);
-            return new ResponseEntity<>(user,headers,HttpStatus.OK);
+            return new ResponseEntity<>(user, headers, HttpStatus.OK);
         }
     }
 
     /*
-    * This endpoint is used to logout a user.
-    * Authentication is required to access this endpoint, so accessToken is taken as request header to make sure user is authenticated.
-    */
+     * This endpoint is used to logout a user.
+     * Authentication is required to access this endpoint, so accessToken is taken as request header to make sure user is authenticated.
+     */
     @PutMapping("/logout")
     @CrossOrigin
-    public ResponseEntity<String> logout(@RequestHeader String accessToken){
-        if(userAuthTokenService.isUserLoggedIn(accessToken) == null){
+    public ResponseEntity<String> logout(@RequestHeader String accessToken) {
+        if (userAuthTokenService.isUserLoggedIn(accessToken) == null) {
             return new ResponseEntity<>("Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
-        }
-        else if(userAuthTokenService.isUserLoggedIn(accessToken).getLogoutAt()!=null){
+        } else if (userAuthTokenService.isUserLoggedIn(accessToken).getLogoutAt() != null) {
             return new ResponseEntity<>("Invalid Coupon!", HttpStatus.UNAUTHORIZED);
-        }  else{
+        } else {
             userAuthTokenService.removeAccessToken(accessToken);
-            return new ResponseEntity<>("You have logged out successfully!",HttpStatus.OK);}
+            return new ResponseEntity<>("You have logged out successfully!", HttpStatus.OK);
+        }
     }
 
     /*
@@ -112,12 +135,12 @@ public class UserController {
      */
     @PutMapping("")
     @CrossOrigin
-    public ResponseEntity<?> updateUserName (@RequestParam String firstName, String lastName, @RequestHeader String accessToken) {
-        if(userAuthTokenService.isUserLoggedIn(accessToken) == null){
+    public ResponseEntity<?> updateUserName(@RequestParam String firstName, String lastName, @RequestHeader String accessToken) {
+        if (userAuthTokenService.isUserLoggedIn(accessToken) == null) {
             return new ResponseEntity<>("Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
-        } else if(userAuthTokenService.isUserLoggedIn(accessToken).getLogoutAt()!=null){
+        } else if (userAuthTokenService.isUserLoggedIn(accessToken).getLogoutAt() != null) {
             return new ResponseEntity<>("You have already logged out. Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
-        }  else {
+        } else {
             int userId = userAuthTokenService.getUserId(accessToken);
             User user = userService.updateUser(firstName, lastName, userId);
             return new ResponseEntity<>(user, HttpStatus.OK);
@@ -130,7 +153,7 @@ public class UserController {
      */
     @PutMapping("/password")
     @CrossOrigin
-    public ResponseEntity<?> updatePassword (@RequestParam String oldPassword, @RequestParam String newPassword, @RequestHeader String accessToken) {
+    public ResponseEntity<?> updatePassword(@RequestParam String oldPassword, @RequestParam String newPassword, @RequestHeader String accessToken) {
         //Converting oldPassword and newPassword into Sha 256
         String oldPwdSha = Hashing.sha256()
                 .hashString(oldPassword, Charsets.US_ASCII)
@@ -138,9 +161,9 @@ public class UserController {
         String newPwdSha = Hashing.sha256()
                 .hashString(newPassword, Charsets.US_ASCII)
                 .toString();
-        if(userAuthTokenService.isUserLoggedIn(accessToken) == null){
+        if (userAuthTokenService.isUserLoggedIn(accessToken) == null) {
             return new ResponseEntity<>("Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
-        } else if(userAuthTokenService.isUserLoggedIn(accessToken).getLogoutAt()!=null){
+        } else if (userAuthTokenService.isUserLoggedIn(accessToken).getLogoutAt() != null) {
             return new ResponseEntity<>("You have already logged out. Please Login first to access this endpoint!", HttpStatus.UNAUTHORIZED);
         } else {
             // Looking for userId ONLY IF user is logged in.
@@ -155,44 +178,5 @@ public class UserController {
                 return new ResponseEntity<>("Password updated successfully!", HttpStatus.OK);
             }
         }
-    }
-
-
-    /*
-    * Using Regex and pattern matcher to check email validity
-    */
-    public static boolean isEmailValid (String email) {
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
-                "[a-zA-Z0-9_+&*-]+)*@" +
-                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
-                "A-Z]{2,7}$";
-
-        Pattern pat = Pattern.compile(emailRegex);
-        if (email == null)
-            return false;
-        return pat.matcher(email).matches();
-    }
-
-    /*
-     * Using Regex and pattern matcher to check contact number validity
-     */
-    public static boolean isContactNumberValid (String contactNumber) {
-        if (contactNumber.matches("\\d{10}")) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /*
-     * Using Regex and pattern matcher to check password strength
-     */
-    public static boolean isPasswordStrong (String password) {
-        String passwordRegex = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[#@$%&*!^]).{8,}$";
-        Pattern pat = Pattern.compile(passwordRegex );
-        if (password == null)
-            return false;
-
-        return pat.matcher(password).matches();
     }
 }

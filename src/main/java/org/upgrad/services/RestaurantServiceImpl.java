@@ -27,8 +27,6 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     private List<Restaurant> restaurants;
 
-    private RestaurantResponseCategorySet restaurantResponseCategorySet;
-
     @Override
     public List<RestaurantResponse> getAllRestaurant() {
         restaurants = restaurantRepository.findAllRestaurant();
@@ -52,8 +50,9 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public RestaurantResponseCategorySet getRestaurantDetails(int id) {
+        RestaurantResponseCategorySet restaurantResponseCategorySet = null;
         Restaurant restaurant = restaurantRepository.findRestaurantById(id);
-
+        System.out.print(restaurant);
         if (restaurant != null) {
             Set<CategoryResponse> categorySet = new LinkedHashSet<>();
             List<Category> categories = restaurant.getCategories();
@@ -68,6 +67,7 @@ public class RestaurantServiceImpl implements RestaurantService {
                     restaurant.getPhotoUrl(), restaurant.getUserRating(), restaurant.getAvgPrice(), restaurant.getNumberUsersRated(),
                     restaurant.getAddress(), categorySet);
         }
+
         return restaurantResponseCategorySet;
     }
 
@@ -75,9 +75,9 @@ public class RestaurantServiceImpl implements RestaurantService {
     public Restaurant updateRating(int rating, int id) {
         Restaurant restaurant;
         restaurant = restaurantRepository.findRestaurantById(id);
-        int count = restaurantRepository.updateRating(rating,restaurant.getNumberUsersRated() +1 , id);
+        int count = restaurantRepository.updateRating(rating, restaurant.getNumberUsersRated() + 1, id);
         System.out.println("count" + count);
-        if (count > 0){
+        if (count > 0) {
             restaurant = restaurantRepository.findRestaurantById(id);
         }
         return restaurant;

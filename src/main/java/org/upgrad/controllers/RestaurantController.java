@@ -117,7 +117,7 @@ public class RestaurantController {
 
             if (restaurantResponseCategorySet == null) {
                 return new ResponseEntity<>("No Restaurant by this id!", HttpStatus.NOT_FOUND);
-            }else {
+            } else {
                 Restaurant restaurant = restaurantService.updateRating(Integer.parseInt(rating), restaurantId);
                 return new ResponseEntity<>(restaurant, HttpStatus.OK);
             }

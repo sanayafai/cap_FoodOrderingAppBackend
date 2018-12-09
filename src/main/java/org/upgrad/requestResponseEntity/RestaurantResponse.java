@@ -1,12 +1,6 @@
 package org.upgrad.requestResponseEntity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.upgrad.models.Address;
-
-import javax.persistence.*;
-import java.util.Set;
 
 /*
  * RestaurantResponse class contain all the attributes that are to be returned as a response.

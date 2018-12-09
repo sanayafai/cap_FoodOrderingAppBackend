@@ -13,7 +13,8 @@ public class States {
     private Integer id;
 
     private String stateName;
-    public States(){
+
+    public States() {
 
     }
 

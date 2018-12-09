@@ -5,12 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.upgrad.models.Address;
-import org.upgrad.models.States;
 import org.upgrad.services.AddressService;
 import org.upgrad.services.UserAuthTokenService;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -22,6 +19,15 @@ public class AddressController {
     @Autowired
     private UserAuthTokenService userAuthTokenService;
 
+    //Method to check if a zip code is a valid 6 digit number.
+    public static boolean isZipcodeValid(String zipcode) {
+        if (zipcode.matches("\\d{6}")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /*
      * This endpoint is to get all states.
      */
@@ -30,7 +36,6 @@ public class AddressController {
     public ResponseEntity<?> allStates() {
         return new ResponseEntity<>(addressService.getAllStates(), HttpStatus.OK);
     }
-
 
     /*
      * This endpoint is to add new address.
@@ -135,16 +140,6 @@ public class AddressController {
                 addressService.deletePermAddressById(addressId);
                 return new ResponseEntity<>("Address has been deleted successfully!", HttpStatus.OK);
             }
-        }
-    }
-
-
-    //Method to check if a zip code is a valid 6 digit number.
-    public static boolean isZipcodeValid(String zipcode) {
-        if (zipcode.matches("\\d{6}")) {
-            return true;
-        } else {
-            return false;
         }
     }
 }

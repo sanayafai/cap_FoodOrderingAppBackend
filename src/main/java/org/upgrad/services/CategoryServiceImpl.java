@@ -1,15 +1,15 @@
 package org.upgrad.services;
 
-import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
-
 import org.upgrad.models.Category;
 import org.upgrad.repositories.CategoryRepository;
+
+import javax.transaction.Transactional;
 
 @Service
 @Transactional
 public class CategoryServiceImpl implements CategoryService {
-  
+
     private final CategoryRepository categoryRepository;
 
     public CategoryServiceImpl(CategoryRepository categoryRepository) {
@@ -22,12 +22,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category getCategory(String categoryName){
+    public Category getCategory(String categoryName) {
         return categoryRepository.getCategoryByName(categoryName);
     }
 
     @Override
-    public Integer getCategoryCount(String categoryName){
+    public Integer getCategoryCount(String categoryName) {
 
 
         return categoryRepository.getCategoryCountByName(categoryName);

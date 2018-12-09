@@ -1,7 +1,5 @@
 package org.upgrad.models;
 
-import javax.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;

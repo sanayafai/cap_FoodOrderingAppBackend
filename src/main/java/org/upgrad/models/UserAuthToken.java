@@ -1,7 +1,5 @@
 package org.upgrad.models;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -12,7 +10,7 @@ import java.util.Date;
  * Here getter, setter and constructor are defined for this model class.
  */
 @Entity
-@Table(name="user_auth_token")
+@Table(name = "user_auth_token")
 public class UserAuthToken {
 
     @Id

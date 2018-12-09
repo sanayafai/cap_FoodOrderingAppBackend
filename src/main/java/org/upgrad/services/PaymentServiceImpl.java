@@ -7,7 +7,7 @@ import org.upgrad.repositories.PaymentRepository;
 import java.util.List;
 
 @Service
-public class PaymentServiceImpl implements PaymentService{
+public class PaymentServiceImpl implements PaymentService {
 
     private PaymentRepository paymentRepository;
 

@@ -12,25 +12,20 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.upgrad.models.Coupon;
 import org.upgrad.models.Order;
-import org.upgrad.requestResponseEntity.ItemQuantity;
 import org.upgrad.models.UserAuthToken;
+import org.upgrad.requestResponseEntity.ItemQuantity;
 import org.upgrad.services.OrderService;
 import org.upgrad.services.UserAuthTokenService;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.util.DateUtil.now;
-import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.hamcrest.Matchers.containsString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 // This class contains all the test cases regarding the order controller
 @RunWith(SpringRunner.class)
@@ -45,6 +40,15 @@ public class OrderControllerTest {
 
     @MockBean
     private UserAuthTokenService userAuthTokenService;
+
+    private static String createUserInJson(Integer itemId, Integer quantity) {
+        return "[\n" +
+                "  {\n" +
+                "    \"itemId\":\"" + itemId + "\",\n" +
+                "    \"quantity\":\"" + quantity + "\" \n" +
+                "  }\n" +
+                "]";
+    }
 
     @Test
     public void getCouponWithoutLogin() throws Exception {
@@ -69,7 +73,6 @@ public class OrderControllerTest {
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString("You have already logged out. Please Login first to access this endpoint!")));
     }
-
 
     @Test
     public void getCouponWithInvalidCouponName() throws Exception {
@@ -125,7 +128,6 @@ public class OrderControllerTest {
                 .andExpect(content().string(containsString("You have already logged out. Please Login first to access this endpoint!")));
     }
 
-
     @Test
     public void getOrdersWithNoPastOrders() throws Exception {
         String accessToken = "#############################";
@@ -159,7 +161,6 @@ public class OrderControllerTest {
                 .andExpect(jsonPath("$[0].bill", Matchers.is(1200.0)));
     }
 
-
     @Test
     public void saveOrdersWithoutLogin() throws Exception {
         String addressId = "1";
@@ -179,15 +180,6 @@ public class OrderControllerTest {
                 .header("accessToken", accessToken))
                 .andExpect(status().is4xxClientError())
                 .andExpect(content().string(containsString("Please Login first to access this endpoint!")));
-    }
-
-    private static String createUserInJson(Integer itemId, Integer quantity) {
-        return "[\n" +
-                "  {\n" +
-                "    \"itemId\":\"" + itemId + "\",\n" +
-                "    \"quantity\":\"" + quantity + "\" \n" +
-                "  }\n" +
-                "]";
     }
 
     @Test

@@ -20,9 +20,7 @@ import static java.util.Collections.singletonList;
 import static org.assertj.core.util.DateUtil.now;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 // This class contains all the test cases regarding the payment controller
 @RunWith(SpringRunner.class)
@@ -39,7 +37,7 @@ public class PaymentControllerTest {
     private UserAuthTokenService userAuthTokenService;
 
     @Test
-    public void getPaymentMethodsWithoutLogin() throws Exception{
+    public void getPaymentMethodsWithoutLogin() throws Exception {
         String accessToken = "#############################";
         Mockito.when(userAuthTokenService.isUserLoggedIn(accessToken)).thenReturn(null);
         String url = "/payment";
@@ -50,7 +48,7 @@ public class PaymentControllerTest {
     }
 
     @Test
-    public void getPaymentMethodsWithLoggedOutUser() throws Exception{
+    public void getPaymentMethodsWithLoggedOutUser() throws Exception {
         String accessToken = "#############################";
         UserAuthToken userAuthToken = new UserAuthToken();
         userAuthToken.setLogoutAt(now());
@@ -63,7 +61,7 @@ public class PaymentControllerTest {
     }
 
     @Test
-    public void getPaymentMethods() throws Exception{
+    public void getPaymentMethods() throws Exception {
         String accessToken = "#############################";
         UserAuthToken userAuthToken = new UserAuthToken();
         Payment payment = new Payment();
